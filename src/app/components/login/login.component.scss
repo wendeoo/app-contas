@@ -1,0 +1,135 @@
+.container {
+    display: flex;
+    justify-content: center;        
+    padding: 10vw;
+    background-color: var(--background);
+    height: 100vh;
+
+    .main {
+        display: flex;
+        align-items: center;
+        justify-content: center;      
+        background-color: var(--darkest);
+        width: 100%;
+        height: auto;
+        max-height: 600px;
+        border-radius: 12px;
+
+        app-loader {
+            align-self: center;
+            justify-self: center;
+        }
+
+        .login-box,
+        .register-box {
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+            justify-content: center;                               
+
+            .login-title,
+            .register-title {
+                font-size: 22px;
+                color: white;
+                text-align: center;
+                padding-bottom: 30px;
+                font-weight: 500;
+            }
+
+            .login-form {
+                display: flex;
+                flex-direction: column;
+                align-items: left;
+                justify-content: center; 
+                
+                .emailLogin,
+                .passwordLogin {
+                    margin-bottom: 8px;
+                }
+
+                .btn-enter {
+                    background-color: var(--button);
+                    cursor: pointer;
+                    color: white;
+                    padding: 10px;
+                    font-weight: 700;
+                    border-width: 0;
+                    margin-top: 25px;    
+                    
+                    &.disabled {
+                        background-color: rgb(153, 153, 153);
+                    }
+                }
+    
+                .btn-enter:hover :not(.disabled) {
+                    background-color:var(--button-hover);
+                }
+    
+                .btn-enter:active{
+                    position:relative;
+                }
+
+            }
+            
+            .register-form {
+                display: flex;
+                flex-direction: column;
+                align-items: left;
+                justify-content: center;                 
+
+                .emailRegister,
+                .nameRegister,
+                .passwordRegister {
+                    margin-bottom: 8px;
+                }
+
+                .btn-register {
+                    background-color: var(--button);
+                    cursor: pointer;
+                    color: white;
+                    padding: 10px;
+                    font-weight: 700;
+                    border-width: 0;
+                    margin-top: 25px;
+                    
+                    &.disabled {
+                        background-color: rgb(153, 153, 153);
+                    }
+                }
+
+                .btn-register:hover :not(.disabled) {
+                    background-color:var(--button-hover);
+                }
+
+                .btn-register:active {
+                    position:relative;
+                }               
+            }                      
+
+            .register,
+            .login {
+                display: flex;
+                align-items: center;
+                justify-content: center;   
+                font-size: 12px;
+                text-align: center;
+                color: white;
+                margin-top: 30px;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+
+            .error {
+                align-self: center;
+                position: absolute;
+                max-width: 170px;
+                font-size: 14px;
+                text-align: center;
+                color: #ff0000;
+                margin-top: 400px;
+            }
+        }
+    }
+}

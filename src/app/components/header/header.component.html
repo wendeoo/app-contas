@@ -1,0 +1,10 @@
+<div class="container">
+    <div class="content">
+        <p *ngIf="loadingData">carregando dados...</p>
+        <p *ngIf="!loadingData">{{ greetingMessage + userName }}!</p>
+        <a *ngIf="!loadingData" (click)="logout()"><mat-icon>exit_to_app</mat-icon></a>
+    </div>
+    <div class="today">
+        Hoje é {{ weekDay + ', ' + day + ' de ' + month + ' de ' + year}}
+    </div>
+</div>

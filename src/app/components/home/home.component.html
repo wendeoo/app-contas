@@ -1,0 +1,26 @@
+<div class="container">
+    <app-header [weekDay]="weekDay" [day]="day" [month]="month" [year]="year"></app-header>
+    <div class="content">
+        <div class="content-header">
+            <div class="selected-month">Janeiro/2023</div>
+            <mat-icon>calendar_today</mat-icon>
+        </div>
+        <div class="expenses">
+            <div class="month-expenses">
+                <div class="paid-total">Total pago: R{{ valueCalc('paid') | currency }}</div>
+                <div class="unpaid-total">Saldo devedor: R{{ valueCalc('unpaid') | currency }}</div>
+            </div>
+            <div class="add-new-bill">
+                <mat-icon (click)="createNewBill()">note_add</mat-icon>
+            </div> 
+        </div>
+        <div class="cards" >
+            <app-bill-card
+                *ngFor="let bill of bills; let i = index"
+                [billData]="bill"
+                (deleteEmitter)="removeBill(i)">
+            </app-bill-card>
+        </div>       
+    </div>
+    <app-footer></app-footer>
+</div>

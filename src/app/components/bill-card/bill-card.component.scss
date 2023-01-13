@@ -1,0 +1,117 @@
+.bill-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 80vw;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: var(--card-not-paid);
+
+    input {
+        outline: 1px;
+        border-radius: 5px;
+        padding: 3px;
+        border-width: 2px;       
+    }
+
+    &.bill-paid  {
+        background-color: var(--card-paid);
+    }
+
+    &.bill-editing {
+        background-color: white;
+    }
+
+    .bill-header {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        height: fit-content;
+        align-items: center;
+
+        .bill-value {
+            color: white;
+            font-weight: 700;
+            font-size: 22px;
+            max-width: 200px;
+        }
+        .value-input {
+            color: black;
+            font-weight: 700;
+            font-size: 18px;
+            width: 100px;                   
+        }
+
+        .bill-date {
+            font-size: 14px;  
+            color: var(--bill-date-unpaid);                  
+
+            &.date-paid {
+                color: var(--bill-date-paid);
+            }
+        }
+        .date-input {
+            color: black;
+            font-size: 14px;
+            width: 120px;             
+        }
+    }
+
+    .bill-middle {
+        margin-top: 4px;
+        display: flex;
+        height: fit-content;
+        width: 100%;
+
+        .bill-name {
+            padding-top: 4px;
+            color: white;
+        }  
+        .name-input {
+            color: black;
+            font-size: 16px;
+            width: 100%;           
+        }              
+    } 
+    
+    .bill-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-top: 14px;
+        margin-bottom: 5px;
+
+        .payment-info {
+            display: flex;
+            align-items: center;
+
+            #checkbox-paid {
+                width: 25px;
+                height: 25px;
+                accent-color: var(--checkbox-paid);
+            }
+
+            .paid-notice {
+                color: white;
+                margin-left: 12px;
+                font-size: 12px;
+            }
+        }
+
+        .icons {
+            display: flex;          
+
+            .bill-edit {
+                color: white;  
+                margin-left: 12px; 
+                
+                &.bill-editing {
+                    color: black;
+                }
+            }
+        }
+    }            
+} 

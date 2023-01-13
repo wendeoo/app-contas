@@ -1,0 +1,73 @@
+import { Injectable } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth'
+import { AngularFirestore } from '@angular/fire/compat/firestore'
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FirebaseService {
+
+  public isSignedIn: boolean = false;
+  public errorMessage: string = '';
+
+  constructor(public firebaseAuth: AngularFireAuth, public firebaseFirestore: AngularFirestore) {}
+
+  public async signIn(email: string, password: string) {  
+    await this.firebaseAuth.signInWithEmailAndPassword(email, password)
+      .then(res => {
+        this.isSignedIn = true;
+        localStorage.setItem('user', res.user?.uid!);        
+      }, (err) => {
+        switch (err.code) {
+          case 'auth/wrong-password':
+            this.errorMessage = 'Senha incorreta.';          
+          break;
+          case 'auth/invalid-email':
+            this.errorMessage = 'Email inválido.';
+          break;
+          case 'auth/user-not-found':
+            this.errorMessage = 'Usuário não encontrado.';
+          break;
+          case 'auth/too-many-requests':
+            this.errorMessage = 'Tentativas de login excedidas. Por favor aguarde.';  
+          break;
+        }
+      })
+  }
+
+  public async signUp(email: string, password: string, name: string) {
+    await this.firebaseAuth.createUserWithEmailAndPassword(email, password)
+      .then(async res => {
+        this.isSignedIn = true;
+        await this.firebaseFirestore.collection('Users').doc(res?.user?.uid).set({
+          name
+        });
+        localStorage.setItem('user', res?.user?.uid!);   
+        return res?.user?.uid;
+      }, (err) => {
+        switch (err.code) {
+          case 'auth/email-already-in-use':
+            this.errorMessage = 'Email já cadastrado.';
+          break;
+          case 'auth/invalid-email':
+            this.errorMessage = 'Email inválido.';
+          break;
+          case 'auth/too-many-requests':
+            this.errorMessage = 'Tentativas de login excedidas. Por favor aguarde.';  
+          break;
+        }
+      })   
+  }
+
+  public logout(): void {
+    localStorage.removeItem('user');
+    this.firebaseAuth.signOut();    
+  }
+
+  public getUserData(): Observable<any> | undefined {
+    let userUid = localStorage.getItem('user');
+    if (!userUid) return;    
+    return this.firebaseFirestore.collection('Users').doc(userUid).valueChanges();
+  }
+}
