@@ -9,11 +9,29 @@
     border-radius: 8px;
     background-color: var(--card-not-paid);
 
+    .lock {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        color: white;
+        margin-bottom: 4px;
+
+        &.bill-editing {
+            color: black;
+        }
+
+        p {
+            font-size: 12px;
+            padding-left: 6px;
+        }
+    }
+
     input {
         outline: 1px;
         border-radius: 5px;
         padding: 3px;
-        border-width: 2px;       
+        border-width: 2px;
     }
 
     &.bill-paid  {
@@ -22,6 +40,7 @@
 
     &.bill-editing {
         background-color: white;
+        box-shadow: 0px 4px 0px 0px rgba(#000000, 0.2);
     }
 
     .bill-header {
@@ -52,10 +71,20 @@
                 color: var(--bill-date-paid);
             }
         }
-        .date-input {
-            color: black;
-            font-size: 14px;
-            width: 120px;             
+
+        .editing-date {
+            display: flex;
+            align-items: center;
+
+            label {
+                color: black;
+                padding-right: 10px;
+            }
+            .date-input {
+                color: black;
+                font-size: 14px;
+                width: 120px;             
+            }
         }
     }
 
@@ -67,6 +96,8 @@
 
         .bill-name {
             padding-top: 4px;
+            font-size: 18px;
+            font-weight: 500;
             color: white;
         }  
         .name-input {
@@ -82,11 +113,17 @@
         align-items: center;
         width: 100%;
         margin-top: 14px;
-        margin-bottom: 5px;
 
         .payment-info {
             display: flex;
             align-items: center;
+            justify-content: center;
+
+            label {
+                color: white;
+                margin-left: 10px;
+                font-size: 14px;
+            }
 
             #checkbox-paid {
                 width: 25px;
@@ -97,20 +134,51 @@
             .paid-notice {
                 color: white;
                 margin-left: 12px;
-                font-size: 12px;
+                font-size: 14px;
+            }
+
+            .paid-date-input {
+                color: black;
+                font-size: 14px;
+                margin-left: 10px;           
             }
         }
 
         .icons {
-            display: flex;          
-
-            .bill-edit {
-                color: white;  
-                margin-left: 12px; 
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 700;  
+            
+            .bill-edit {   
+                color: white;                   
+                margin-left: 4px; 
                 
                 &.bill-editing {
                     color: black;
                 }
+            }
+
+            .delete {
+                display: flex;
+                align-items: center;
+                
+                .bill-delete {   
+                    color: white;                   
+                    margin-left: 4px; 
+                    
+                    &.bill-editing {
+                        color: black;
+                    }
+                }
+            }
+
+            .save {
+                display: flex;  
+                align-items: center;
+                margin-top: 8px;              
             }
         }
     }            

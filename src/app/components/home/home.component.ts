@@ -13,6 +13,7 @@ export class HomeComponent implements OnInit {
   public month: string = '';
   public year: number = 0;
   public bills: any[] = [];
+  public paidBills: any[] = [];
   public today: any;
 
   ngOnInit(): void {
@@ -23,21 +24,25 @@ export class HomeComponent implements OnInit {
     if (_month <= 9) this.month = '0' + _month;
     this.today = _date.getDate()+'/'+this.month+'/'+_date.getFullYear();
 
-    // this.bills.push({
-    //   billName: 'Conta de Energia',
-    //   billValue: 160.65,
-    //   billDate: '12/01/2023',
-    //   isPaid: false,
-    //   isEditing: false
-    // });
+    this.bills.push({
+      billName: 'Conta de Energia',
+      billValue: 160.65,
+      billDate: '12/01/2023',
+      billPaidDate: this.today,
+      isPaid: false,
+      isLocked: false,
+      isEditing: false
+    });
 
-    // this.bills.push({
-    //   billName: 'Condomínio',
-    //   billValue: 250.82,
-    //   billDate: '25/01/2023',
-    //   isPaid: false,
-    //   isEditing: false
-    // });
+    this.bills.push({
+      billName: 'Condomínio',
+      billValue: 250.82,
+      billDate: '25/01/2023',
+      billPaidDate: this.today,
+      isPaid: false,
+      isLocked: false,
+      isEditing: false
+    });
 
     switch (this.date.getDay()) {
       case 0: this.weekDay = 'Domingo'; break;
@@ -67,30 +72,41 @@ export class HomeComponent implements OnInit {
     }
 
     this.year = this.date.getFullYear();
-
   }
 
   public createNewBill(): void {
     this.bills.push({
-      billName: 'Nome da conta',
-      billValue: 0.00,
+      billName: '',
+      billValue: '',
       billDate: this.today,
+      billPaidDate: this.today,
       isPaid: false,
+      isLocked: false,
       isEditing: true
     });
+  }
+
+  public checkPaidBills(): void {
+    this.paidBills = this.bills.filter((element) => element.isPaid === true);
   }
 
   public valueCalc(operation: 'paid' | 'unpaid'): number {
     let _total = 0;
     this.bills.forEach((element) => {
       if (operation === 'paid') {
-        if (element.isPaid && !element.isEditing) _total += element.billValue;
+        if (element.isPaid) _total += element.billValue;
       } else {
-        if (!element.isPaid && !element.isEditing) _total += element.billValue;
+        if (!element.isPaid) _total += element.billValue;
       }
     });
     _total.toString().replace('.', ',');
     return _total;
+  }
+
+  public stopEditing(): void {
+    this.bills.forEach((element) => {
+      if (element.isEditing) element.isEditing = false;
+    })
   }
 
   public removeBill(index: number): void {

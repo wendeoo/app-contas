@@ -12,11 +12,12 @@
         align-items: center;  
         padding: 10px 0;
         width: 80vw;
-        height: 100vh;       
+        height: 100%;    
+        min-height: 100vh;   
 
         .expenses {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             margin: 10px 0;
             width: 100%;
 
@@ -40,6 +41,7 @@
                 align-items: center;
                 justify-content: center;
                 margin-top: 10px;
+                margin-left: 10px;
                 color: var(--darkest);  
                 
                 mat-icon {
@@ -48,6 +50,24 @@
                 height: auto;
                 }        
             }
+        }
+
+        .bills-amount {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            width: 100%;
+            padding: 4px;
+            font-size: 16px;
+            font-weight: 600;
+
+            p {
+                margin-left: 4px;
+            }
+        }
+
+        .no-bills {
+            padding-top: 40px;
         }
 
         .content-header {

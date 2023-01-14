@@ -1,7 +1,7 @@
 <div class="container">
     <div class="main">
         <app-loader *ngIf="isLoading"></app-loader>
-        <div *ngIf="isLoginScreen && !isLoading" class="login-box">
+        <div *ngIf="isLoginScreen && !isResettingPassword && !isLoading" class="login-box">
             <div class="login-title">Entrar</div>
             <form class="login-form" [formGroup]="formLogin">
                 <label for="emailLogin">email</label>
@@ -11,9 +11,10 @@
                 <button type="button" class="btn-enter" [class.disabled]="!formLogin.valid" (click)="onLogin(emailLogin.value, passwordLogin.value)">ENTRAR</button>
                 </form>
             <a class="register" (click)="loginRegister()">Não tenho uma conta {{ forwardArrows }}</a>
+            <a class="forgot-password-link" (click)="isResettingPassword = true">Esqueci minha senha</a>
             <div *ngIf="hasError" class="error"> {{ errorMessage }} </div>
         </div>
-        <div *ngIf="!isLoginScreen && !isLoading" class="register-box">
+        <div *ngIf="!isLoginScreen && !isResettingPassword && !isLoading" class="register-box">
             <div class="register-title">Criar Conta</div>
             <form class="register-form" [formGroup]="formRegister">
                 <label for="nameRegister">nome</label>
@@ -28,6 +29,14 @@
                 >CRIAR CONTA</button>
             </form>
             <a class="login" (click)="loginRegister()">{{ backArrows }} Já tenho uma conta</a>
+            <div *ngIf="hasError" class="error"> {{ errorMessage }} </div>
+        </div>
+        <div *ngIf="isResettingPassword && !isLoading" class="password-reset-box">
+            <div class="reset-title">Recuperar Senha</div>
+            <label for="emailReset">email cadastrado</label>
+            <input (click)="hasError = false" class="emailReset" id="emailReset" type="text" #emailReset>
+            <button type="button" class="btn-send" (click)="sendResetPasswordLink(emailReset.value)">ENVIAR</button>
+            <a class="return-login" (click)="isResettingPassword = false">{{ backArrows }} voltar</a>
             <div *ngIf="hasError" class="error"> {{ errorMessage }} </div>
         </div>
     </div>

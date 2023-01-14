@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 export class FirebaseService {
 
   public isSignedIn: boolean = false;
+  public resetPasswordSent: boolean = false;
   public errorMessage: string = '';
 
   constructor(public firebaseAuth: AngularFireAuth, public firebaseFirestore: AngularFirestore) {}
@@ -34,6 +35,28 @@ export class FirebaseService {
           break;
         }
       })
+  }
+
+  public async recoveryPassword(email: string) {
+    await this.firebaseAuth.sendPasswordResetEmail(email)
+    .then(() => {
+      this.resetPasswordSent = true;
+    }, (err) => {
+      switch (err.code) {
+        case 'auth/invalid-email':
+          this.errorMessage = 'Email inválido.';
+        break;
+        case 'auth/user-not-found':
+          this.errorMessage = 'Usuário não encontrado.';
+        break;
+        case 'auth/too-many-requests':
+          this.errorMessage = 'Tentativas de login excedidas. Por favor aguarde.';  
+        break;
+        case 'auth/missing-email':
+          this.errorMessage = 'Preencha o campo de email.';  
+        break;
+      } 
+    })
   }
 
   public async signUp(email: string, password: string, name: string) {

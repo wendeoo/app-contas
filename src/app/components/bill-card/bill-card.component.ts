@@ -8,17 +8,21 @@ import { DatePipe } from '@angular/common';
 })
 export class BillCardComponent implements OnInit {
 
-  @Output() deleteEmitter: EventEmitter<any> = new EventEmitter();
+  @Input() public today: any;
+  @Output() public deleteEmitter: EventEmitter<any> = new EventEmitter();
+  @Output() public billPaidEmitter: EventEmitter<any> = new EventEmitter();
 
-  public today: any;
   public month: any;
   public isEditing: boolean = false;
+  public lockIcon: string = 'lock_open';
 
   @Input() public billData: any = {
     billName: '',
     billValue: 0,
     billDate: 0,
+    billPaidDate: 0,
     isPaid: false,
+    isLocked: false,
     isEditing: true
   };
 
@@ -26,18 +30,48 @@ export class BillCardComponent implements OnInit {
     
   }
 
+  public billLockToggle(): void {
+    if (this.lockIcon === 'lock') {
+    this.lockIcon = 'lock_open';
+    this.billData.isLocked = false; 
+    //enviar dados para o firebase
+    } else {
+      this.lockIcon = 'lock';
+      this.billData.isLocked = true; 
+      //enviar dados para o firebase
+    }
+  }
+
+  public billPaid(): void {
+    this.billData.isPaid = !this.billData.isPaid;
+    this.billPaidEmitter.emit();
+
+    //enviar dados para o firebase
+  }
+
   public billEdit(): void {
     this.billData.isEditing = true;
   }
 
   public saveEdit(): void {
-    //enviar novos dados para o firebase
-    this.billData.isEditing = false;
-    this.formatDate();
+    if (this.billData.billValue <= 0) {
+      this.deleteBill();
+    } else {     
+
+      if (this.billData.billName === '') {
+        this.billData.billName = '(nova conta)'
+      }
+
+      this.billData.isEditing = false;
+      this.formatDate();
+
+      //enviar dados para o firebase
+    }
   }
 
   public formatDate(): void {
     this.billData.billDate = this.billData.billDate.split('-').reverse().join('/');   
+    this.billData.billPaidDate = this.billData.billPaidDate.split('-').reverse().join('/');   
   }
 
   public deleteBill(): void {

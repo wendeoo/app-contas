@@ -11,6 +11,7 @@ import { FirebaseService } from 'src/app/services/firebase.service';
 export class LoginComponent implements OnInit {
 
   public isLoginScreen: boolean = true;
+  public isResettingPassword: boolean = false;
   public formRegister!: FormGroup;
   public formLogin!: FormGroup;
   public hasError: boolean = false;
@@ -55,6 +56,19 @@ export class LoginComponent implements OnInit {
         Validators.minLength(6)
       ])]
     });
+  }
+
+  public async sendResetPasswordLink(email: string) {
+    this.isLoading = true;
+    await this.firebaseService.recoveryPassword(email);    
+      if (this.firebaseService.resetPasswordSent) {
+        this.isLoading = false;
+        this.isResettingPassword = false;    
+      } else {
+        this.isLoading = false;
+        this.hasError = true;
+        this.errorMessage = this.firebaseService.errorMessage;  
+      }
   }
 
   public loginRegister(): void {

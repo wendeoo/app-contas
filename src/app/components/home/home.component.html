@@ -1,9 +1,9 @@
 <div class="container">
     <app-header [weekDay]="weekDay" [day]="day" [month]="month" [year]="year"></app-header>
-    <div class="content">
+    <div class="content">        
         <div class="content-header">
             <div class="selected-month">Janeiro/2023</div>
-            <mat-icon>calendar_today</mat-icon>
+            <mat-icon>date_range</mat-icon>
         </div>
         <div class="expenses">
             <div class="month-expenses">
@@ -14,10 +14,20 @@
                 <mat-icon (click)="createNewBill()">note_add</mat-icon>
             </div> 
         </div>
+        <div class="bills-amount">
+            <mat-icon>assignment</mat-icon>
+            
+            <p>{{ bills.length + ' / '}}<p>
+            <mat-icon>assignment_turned_in</mat-icon> 
+            <p>{{ paidBills.length }}</p>
+        </div>
+        <div class="no-bills" *ngIf="!bills.length">Não há contas cadastradas para este mês.</div>
         <div class="cards" >
             <app-bill-card
                 *ngFor="let bill of bills; let i = index"
                 [billData]="bill"
+                [today]="today"
+                (billPaidEmitter)="checkPaidBills()"
                 (deleteEmitter)="removeBill(i)">
             </app-bill-card>
         </div>       
