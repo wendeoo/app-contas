@@ -178,7 +178,23 @@
             .save {
                 display: flex;  
                 align-items: center;
-                margin-top: 8px;              
+                margin-top: 8px;
+                
+                &.disabled {
+                    color: gray;
+                }
+
+                .bill-save {                                       
+                    margin-left: 4px; 
+                    
+                    &.bill-editing :not(.disabled) {
+                        color: black;
+                    }
+
+                    &.disabled {
+                        color: gray;
+                    }
+                }
             }
         }
     }            

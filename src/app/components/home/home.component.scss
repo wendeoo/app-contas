@@ -72,13 +72,13 @@
 
         .content-header {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
 
             .selected-month {
                 color: var(--darkest);
                 font-weight: 700;
                 margin-top: 10px;
-                font-size: 22px;
+                font-size: 24px;
             }
 
             mat-icon {
@@ -88,7 +88,7 @@
                 &:hover {
                     cursor: pointer;
                 }
-            }
+            }            
         }
 
         .cards {

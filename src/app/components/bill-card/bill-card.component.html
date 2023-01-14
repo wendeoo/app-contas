@@ -31,9 +31,9 @@
                 <p>Deletar</p>
                 <mat-icon [class.bill-editing]="billData.isEditing" class="bill-delete">delete_forever</mat-icon>
             </div>            
-            <div class="save" *ngIf="billData.isEditing" (click)="saveEdit()">
+            <div class="save" [class.disabled]="billData.billValue <= 0" *ngIf="billData.isEditing" (click)="saveEdit()">
                 <p>Salvar</p>
-                <mat-icon [class.bill-editing]="billData.isEditing" class="bill-edit">save</mat-icon>
+                <mat-icon [class.bill-editing]="billData.isEditing" class="bill-save">save</mat-icon>
             </div>            
         </div>          
     </div>            

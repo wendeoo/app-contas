@@ -1,5 +1,4 @@
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-bill-card',
@@ -54,9 +53,7 @@ export class BillCardComponent implements OnInit {
   }
 
   public saveEdit(): void {
-    if (this.billData.billValue <= 0) {
-      this.deleteBill();
-    } else {     
+    if (this.billData.billValue > 0) {   
 
       if (this.billData.billName === '') {
         this.billData.billName = '(nova conta)'
@@ -66,7 +63,7 @@ export class BillCardComponent implements OnInit {
       this.formatDate();
 
       //enviar dados para o firebase
-    }
+    }    
   }
 
   public formatDate(): void {

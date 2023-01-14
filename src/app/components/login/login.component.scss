@@ -72,6 +72,29 @@
                 }
 
             }
+
+            .forgot-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                color: white;
+                margin-top: 30px;
+
+                .forgot-password-link {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;   
+                    font-size: 12px;
+                    text-align: center;
+                    margin-left: 10px;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+                }
+
+            }
             
             .register-form {
                 display: flex;
@@ -109,13 +132,12 @@
             }                      
 
             .register,
-            .login,
-            .forgot-password-link,
+            .login,            
             .return-login {
                 display: flex;
                 align-items: center;
                 justify-content: center;   
-                font-size: 12px;
+                font-size: 14px;
                 text-align: center;
                 color: white;
                 margin-top: 30px;

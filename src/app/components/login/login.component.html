@@ -11,7 +11,10 @@
                 <button type="button" class="btn-enter" [class.disabled]="!formLogin.valid" (click)="onLogin(emailLogin.value, passwordLogin.value)">ENTRAR</button>
                 </form>
             <a class="register" (click)="loginRegister()">Não tenho uma conta {{ forwardArrows }}</a>
-            <a class="forgot-password-link" (click)="isResettingPassword = true">Esqueci minha senha</a>
+            <div class="forgot-container">
+                <mat-icon>info</mat-icon>
+                <a class="forgot-password-link" (click)="isResettingPassword = true">Esqueci minha senha</a>
+            </div>
             <div *ngIf="hasError" class="error"> {{ errorMessage }} </div>
         </div>
         <div *ngIf="!isLoginScreen && !isResettingPassword && !isLoading" class="register-box">

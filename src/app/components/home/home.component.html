@@ -2,8 +2,12 @@
     <app-header [weekDay]="weekDay" [day]="day" [month]="month" [year]="year"></app-header>
     <div class="content">        
         <div class="content-header">
-            <div class="selected-month">Janeiro/2023</div>
-            <mat-icon>date_range</mat-icon>
+            <div *ngIf="!isEditingMonth" class="selected-month">{{ concatMonthYear }}</div>
+            <input *ngIf="isEditingMonth" type="month" [(ngModel)]="monthYear">
+            <div class="edit-save" (click)="editMonth()">        
+                <mat-icon *ngIf="!isEditingMonth">edit</mat-icon>
+                <mat-icon *ngIf="isEditingMonth">save</mat-icon>
+            </div>
         </div>
         <div class="expenses">
             <div class="month-expenses">
@@ -15,11 +19,10 @@
             </div> 
         </div>
         <div class="bills-amount">
-            <mat-icon>assignment</mat-icon>
-            
-            <p>{{ bills.length + ' / '}}<p>
+            <mat-icon>assignment</mat-icon>            
+            <p>Contas:{{ ' ' + bills.length + ' / '}}<p>
             <mat-icon>assignment_turned_in</mat-icon> 
-            <p>{{ paidBills.length }}</p>
+            <p>Pagas:{{ ' ' + paidBills.length }}</p>
         </div>
         <div class="no-bills" *ngIf="!bills.length">Não há contas cadastradas para este mês.</div>
         <div class="cards" >

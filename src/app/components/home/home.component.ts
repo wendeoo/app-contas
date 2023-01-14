@@ -15,6 +15,12 @@ export class HomeComponent implements OnInit {
   public bills: any[] = [];
   public paidBills: any[] = [];
   public today: any;
+  public monthYear: string = '0';
+  public isEditingMonth: boolean = false;
+  public splitMonth: any;
+  public splitYear: any;
+  public selectedMonth: any;
+  public concatMonthYear: string = '';
 
   ngOnInit(): void {
 
@@ -23,6 +29,7 @@ export class HomeComponent implements OnInit {
     let _month = _date.getMonth()+1;
     if (_month <= 9) this.month = '0' + _month;
     this.today = _date.getDate()+'/'+this.month+'/'+_date.getFullYear();
+    this.concatMonthYear = this.today;
 
     this.bills.push({
       billName: 'Conta de Energia',
@@ -71,7 +78,36 @@ export class HomeComponent implements OnInit {
       case 11: this.month = 'Dezembro'; break;
     }
 
-    this.year = this.date.getFullYear();
+    this.year = this.date.getFullYear();    
+  }
+
+  public editMonth(): void {
+    if (!this.isEditingMonth) {
+      this.isEditingMonth = true;
+    } else {
+      
+      this.splitMonth = this.monthYear.split('-').splice(1, 3);
+      this.splitYear = this.monthYear.split('-').reverse().splice(1, 1);
+
+      if (this.splitMonth[0] === '01') this.selectedMonth = 'Janeiro';
+      if (this.splitMonth[0] === '02') this.selectedMonth = 'Fevereiro';
+      if (this.splitMonth[0] === '03') this.selectedMonth = 'Março';
+      if (this.splitMonth[0] === '04') this.selectedMonth = 'Abril';
+      if (this.splitMonth[0] === '05') this.selectedMonth = 'Maio';
+      if (this.splitMonth[0] === '06') this.selectedMonth = 'Junho';
+      if (this.splitMonth[0] === '07') this.selectedMonth = 'Julho';
+      if (this.splitMonth[0] === '08') this.selectedMonth = 'Agosto';
+      if (this.splitMonth[0] === '09') this.selectedMonth = 'Setembro';
+      if (this.splitMonth[0] === '10') this.selectedMonth = 'Outubro';
+      if (this.splitMonth[0] === '11') this.selectedMonth = 'Novembro';
+      if (this.splitMonth[0] === '12') this.selectedMonth = 'Dezembro';
+      
+      this.concatMonthYear = this.selectedMonth + '/' + this.splitYear;
+
+      //-
+      this.isEditingMonth = false;
+      //solicitar dados ao firebase      
+    }
   }
 
   public createNewBill(): void {
