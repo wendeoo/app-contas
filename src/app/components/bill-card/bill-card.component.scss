@@ -5,6 +5,7 @@
     margin-top: 10px;
     margin-bottom: 10px;
     width: 80vw;
+    max-width: 500px;
     padding: 10px;
     border-radius: 8px;
     background-color: var(--card-not-paid);
@@ -126,9 +127,12 @@
             }
 
             #checkbox-paid {
-                width: 25px;
-                height: 25px;
-                accent-color: var(--checkbox-paid);
+                width: 20px;
+                height: 20px;
+                accent-color: var(--checkbox-paid);       
+            }
+            #checkbox-paid:checked {
+                background-color: white;
             }
 
             .paid-notice {
@@ -164,13 +168,20 @@
             .delete {
                 display: flex;
                 align-items: center;
+
+                &.disabled {
+                    color: gray;
+                }
                 
-                .bill-delete {   
-                    color: white;                   
+                .bill-delete {                  
                     margin-left: 4px; 
                     
-                    &.bill-editing {
+                    &.bill-editing :not(.disabled) {
                         color: black;
+                    }
+
+                    &.disabled {
+                        color: gray;
                     }
                 }
             }

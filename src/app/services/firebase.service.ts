@@ -93,4 +93,32 @@ export class FirebaseService {
     if (!userUid) return;    
     return this.firebaseFirestore.collection('Users').doc(userUid).valueChanges();
   }
+
+  public createBill(year: string, month: string, billData: any): void {
+    let userUid = localStorage.getItem('user');
+    if (!userUid) return;
+    this.firebaseFirestore.collection('Users').doc(userUid).collection('Years').doc(year)
+    .collection('Months').doc(month).collection('Bills').add(billData);
+  }
+
+  public getBills(year: string, month: string): Observable<any> {
+    let userUid = localStorage.getItem('user');
+    return this.firebaseFirestore.collection('Users').doc(userUid!).collection('Years').doc(year)
+    .collection('Months').doc(month).collection('Bills').snapshotChanges();
+  }
+
+  public updateBill(year: string, month: string, billId: string, billData: any): void {
+    let userUid = localStorage.getItem('user');
+    if (!userUid) return;
+    this.firebaseFirestore.collection('Users').doc(userUid).collection('Years').doc(year)
+    .collection('Months').doc(month).collection('Bills').doc(billId).update(billData);
+  }
+
+  public deleteBill(year: string, month: string, billId: string): void {
+    let userUid = localStorage.getItem('user');
+    if (!userUid) return;
+    this.firebaseFirestore.collection('Users').doc(userUid).collection('Years').doc(year)
+    .collection('Months').doc(month).collection('Bills').doc(billId).delete();
+  }
+
 }

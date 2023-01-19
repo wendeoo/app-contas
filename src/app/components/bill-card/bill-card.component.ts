@@ -1,4 +1,6 @@
+import { FirebaseService } from 'src/app/services/firebase.service';
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
+import { BillData } from 'src/app/interfaces/bill-data';
 
 @Component({
   selector: 'app-bill-card',
@@ -8,6 +10,7 @@ import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 export class BillCardComponent implements OnInit {
 
   @Input() public today: any;
+  @Input() public selectedPeriod: any;
   @Output() public deleteEmitter: EventEmitter<any> = new EventEmitter();
   @Output() public billPaidEmitter: EventEmitter<any> = new EventEmitter();
 
@@ -15,44 +18,58 @@ export class BillCardComponent implements OnInit {
   public isEditing: boolean = false;
   public lockIcon: string = 'lock_open';
 
-  @Input() public billData: any = {
+  constructor(private firebaseService: FirebaseService) {}
+
+  @Input() public billData: BillData = {
     billName: '',
     billValue: 0,
-    billDate: 0,
-    billPaidDate: 0,
+    billDate: '',
+    billPaidDate: '',
     isPaid: false,
     isLocked: false,
-    isEditing: true
-  };
+    isEditing: true,
+    isSaved: false,
+    id: ''
+  }
 
   ngOnInit(): void {
-    
+    if (this.billData.isLocked)
+    this.lockIcon = 'lock';
+    else this.lockIcon === 'lock_open';
   }
 
   public billLockToggle(): void {
     if (this.lockIcon === 'lock') {
     this.lockIcon = 'lock_open';
     this.billData.isLocked = false; 
-    //enviar dados para o firebase
+    const dateParts = this.selectedPeriod.split('-');
+    const year = dateParts[0];
+    const month = dateParts[1];
+    this.firebaseService.updateBill(year, month, this.billData.id, this.billData);
     } else {
       this.lockIcon = 'lock';
       this.billData.isLocked = true; 
-      //enviar dados para o firebase
+      const dateParts = this.selectedPeriod.split('-');
+      const year = dateParts[0];
+      const month = dateParts[1];
+      this.firebaseService.updateBill(year, month, this.billData.id, this.billData);
     }
   }
 
   public billPaid(): void {
     this.billData.isPaid = !this.billData.isPaid;
     this.billPaidEmitter.emit();
-
-    //enviar dados para o firebase
+    const dateParts = this.selectedPeriod.split('-');
+    const year = dateParts[0];
+    const month = dateParts[1];
+    this.firebaseService.updateBill(year, month, this.billData.id, this.billData);
   }
 
   public billEdit(): void {
     this.billData.isEditing = true;
   }
 
-  public saveEdit(): void {
+  public saveEdit(billId: string): void {   
     if (this.billData.billValue > 0) {   
 
       if (this.billData.billName === '') {
@@ -61,8 +78,17 @@ export class BillCardComponent implements OnInit {
 
       this.billData.isEditing = false;
       this.formatDate();
-
-      //enviar dados para o firebase
+      const dateParts = this.selectedPeriod.split('-');
+      const year = dateParts[0];
+      const month = dateParts[1];
+      if (this.billData.isSaved && this.billData.id) this.firebaseService.updateBill(year, month, billId, this.billData);
+      else {
+        this.billData.isSaved = true;
+        this.firebaseService.createBill(year, month, this.billData);
+        setTimeout(() => {
+          location.reload();
+        }, 1000);        
+      }
     }    
   }
 
@@ -72,6 +98,11 @@ export class BillCardComponent implements OnInit {
   }
 
   public deleteBill(): void {
+    if (this.billData.isLocked) return;
     this.deleteEmitter.emit();
+    const dateParts = this.selectedPeriod.split('-');
+    const year = dateParts[0];
+    const month = dateParts[1];
+    this.firebaseService.deleteBill(year, month, this.billData.id);    
   }
 }
