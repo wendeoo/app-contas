@@ -1,4 +1,6 @@
+import { FirebaseService } from 'src/app/services/firebase.service';
 import { Component, OnInit, Output } from '@angular/core';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -11,6 +13,7 @@ export class HomeComponent implements OnInit {
   public weekDay: string = '';
   public day: number = 0;
   public month: string = '';
+  public monthNumber: string = '';
   public year: number = 0;
   public bills: any[] = [];
   public paidBills: any[] = [];
@@ -20,7 +23,10 @@ export class HomeComponent implements OnInit {
   public splitMonth: any;
   public splitYear: any;
   public selectedMonth: any;
-  public concatMonthYear: string = '';
+  public selectedDate: string = 'Janeiro/2023';
+  public isLoading: boolean = false;
+
+  constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit(): void {
 
@@ -28,89 +34,76 @@ export class HomeComponent implements OnInit {
     let _date = new Date(_now);
     let _month = _date.getMonth()+1;
     if (_month <= 9) this.month = '0' + _month;
-    this.today = _date.getDate()+'/'+this.month+'/'+_date.getFullYear();
-    this.concatMonthYear = this.today;
-
-    this.bills.push({
-      billName: 'Conta de Energia',
-      billValue: 160.65,
-      billDate: '12/01/2023',
-      billPaidDate: this.today,
-      isPaid: false,
-      isLocked: false,
-      isEditing: false
-    });
-
-    this.bills.push({
-      billName: 'Condomínio',
-      billValue: 250.82,
-      billDate: '25/01/2023',
-      billPaidDate: this.today,
-      isPaid: false,
-      isLocked: false,
-      isEditing: false
-    });
-
-    switch (this.date.getDay()) {
-      case 0: this.weekDay = 'Domingo'; break;
-      case 1: this.weekDay = 'Segunda-feira'; break;
-      case 2: this.weekDay = 'Terça-feira'; break;
-      case 3: this.weekDay = 'Quarta-feira'; break;
-      case 4: this.weekDay = 'Quinta-feira'; break;
-      case 5: this.weekDay = 'Sexta-feira'; break;
-      case 6: this.weekDay = 'Sábado'; break;
-    }
+    this.today = _date.getDate()+'/'+this.month+'/'+_date.getFullYear();   
+    this.year = this.date.getFullYear();     
+    this.monthYear = `${this.year}-${this.month}`;
+    this.monthNumber = this.month;
+    
+    const weekNames = ['Domingo', 'Segunda-feira', 'Terça-feira',
+    'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+    this.weekDay = weekNames[this.date.getDay()];
 
     this.day = this.date.getDate();
-
-    switch (this.date.getMonth()) {
-      case 0: this.month = 'Janeiro'; break;
-      case 1: this.month = 'Fevereiro'; break;
-      case 2: this.month = 'Março'; break;
-      case 3: this.month = 'Abril'; break;
-      case 4: this.month = 'Maio'; break;
-      case 5: this.month = 'Junho'; break;
-      case 6: this.month = 'Julho'; break;
-      case 7: this.month = 'Agosto'; break;
-      case 8: this.month = 'Setembro'; break;
-      case 9: this.month = 'Outubro'; break;
-      case 10: this.month = 'Novembro'; break;
-      case 11: this.month = 'Dezembro'; break;
-    }
-
-    this.year = this.date.getFullYear();    
+       
+    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    this.month = monthNames[this.date.getMonth()];      
+    
+    this.getBills();
   }
 
-  public editMonth(): void {
+  public editMonth(): void {    
     if (!this.isEditingMonth) {
       this.isEditingMonth = true;
+      setTimeout(() => {        
+        document.getElementById("input-month")?.click();
+      }, 100);
     } else {
-      
-      this.splitMonth = this.monthYear.split('-').splice(1, 3);
-      this.splitYear = this.monthYear.split('-').reverse().splice(1, 1);
-
-      if (this.splitMonth[0] === '01') this.selectedMonth = 'Janeiro';
-      if (this.splitMonth[0] === '02') this.selectedMonth = 'Fevereiro';
-      if (this.splitMonth[0] === '03') this.selectedMonth = 'Março';
-      if (this.splitMonth[0] === '04') this.selectedMonth = 'Abril';
-      if (this.splitMonth[0] === '05') this.selectedMonth = 'Maio';
-      if (this.splitMonth[0] === '06') this.selectedMonth = 'Junho';
-      if (this.splitMonth[0] === '07') this.selectedMonth = 'Julho';
-      if (this.splitMonth[0] === '08') this.selectedMonth = 'Agosto';
-      if (this.splitMonth[0] === '09') this.selectedMonth = 'Setembro';
-      if (this.splitMonth[0] === '10') this.selectedMonth = 'Outubro';
-      if (this.splitMonth[0] === '11') this.selectedMonth = 'Novembro';
-      if (this.splitMonth[0] === '12') this.selectedMonth = 'Dezembro';
-      
-      this.concatMonthYear = this.selectedMonth + '/' + this.splitYear;
-
-      //-
+      if (this.monthYear === '') this.monthYear = `${this.year}-${this.monthNumber}`; 
+      console.log(this.monthYear);
+           
       this.isEditingMonth = false;
-      //solicitar dados ao firebase      
+      this.selectedDate = this.formatDate(this.monthYear);
+      this.getBills();
     }
+  }
+
+  public getBills(): void {
+    this.isLoading = true;
+    const dateParts = this.monthYear.split('-');
+      const year = dateParts[0];
+      const month = dateParts[1];
+      let _sub = this.firebaseService.getBills(year, month).pipe(map((actions) =>
+          actions.map((a: any) => {
+            const data = a.payload.doc.data() as any;
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          })
+        )
+      ).subscribe((data) => {
+        this.isLoading = false;
+        setTimeout(() => {          
+          this.checkPaidBills();
+        }, 100);
+        _sub.unsubscribe();
+        this.bills = data;
+      })
+  }
+
+  public formatDate(date: string): string {
+    const dateParts = date.split('-');
+    const year = dateParts[0];
+    const month = dateParts[1];
+    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+      'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    const monthName = monthNames[parseInt(month) - 1];
+    if (month !== undefined) {
+      return `${monthName}/${year}`;
+    } else return ``;
   }
 
   public createNewBill(): void {
+    if (this.selectedDate === '') return;
     this.bills.push({
       billName: '',
       billValue: '',
@@ -127,16 +120,19 @@ export class HomeComponent implements OnInit {
   }
 
   public valueCalc(operation: 'paid' | 'unpaid'): number {
-    let _total = 0;
-    this.bills.forEach((element) => {
-      if (operation === 'paid') {
-        if (element.isPaid) _total += element.billValue;
-      } else {
-        if (!element.isPaid) _total += element.billValue;
-      }
-    });
-    _total.toString().replace('.', ',');
-    return _total;
+    if (this.selectedDate !== '') {
+      let _total = 0;
+      this.bills.forEach((element) => {
+        if (operation === 'paid') {
+          if (element.isPaid) _total += element.billValue;
+        } else {
+          if (!element.isPaid) _total += element.billValue;
+        }
+      });
+      _total.toString().replace('.', ',');
+      return _total;
+    }
+    return 0;
   }
 
   public stopEditing(): void {
