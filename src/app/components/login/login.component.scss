@@ -2,18 +2,33 @@
     display: flex;
     justify-content: center;        
     padding: 10vw;
-    background-color: var(--background);
+    background-color: var(--darkest);
     height: 100vh;
-
+    
+    input {
+        padding: 6px;
+    }
+    
     .main {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;      
-        background-color: var(--darkest);
+        background-color: black;
         width: 100%;
         height: auto;
-        max-height: 600px;
+        max-height: 700px;
         border-radius: 12px;
+
+        .app-logo {
+            margin-bottom: 400px;
+            position: absolute;
+
+            img {
+            width: 150px;
+            height: auto;
+            }
+        }
 
         app-loader {
             align-self: center;
@@ -23,6 +38,7 @@
         .login-box,
         .register-box,
         .password-reset-box {
+            padding-top: 100px;
             display: flex;
             flex-direction: column;
             align-items: left;
@@ -52,7 +68,7 @@
                 .btn-enter {
                     background-color: var(--button);
                     cursor: pointer;
-                    color: white;
+                    color: black;
                     padding: 10px;
                     font-weight: 700;
                     border-width: 0;
@@ -111,7 +127,7 @@
                 .btn-register {
                     background-color: var(--button);
                     cursor: pointer;
-                    color: white;
+                    color: black;
                     padding: 10px;
                     font-weight: 700;
                     border-width: 0;
@@ -150,7 +166,7 @@
             .btn-send {
                 background-color: var(--button);
                 cursor: pointer;
-                color: white;
+                color: black;
                 padding: 10px;
                 font-weight: 700;
                 border-width: 0;

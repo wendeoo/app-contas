@@ -7,7 +7,8 @@ import { map } from 'rxjs';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+
+export class HomeComponent implements OnInit {    
 
   public date = new Date();
   public weekDay: string = '';
@@ -16,6 +17,7 @@ export class HomeComponent implements OnInit {
   public monthNumber: string = '';
   public year: number = 0;
   public bills: any[] = [];
+  public allBills: any[] = [];
   public paidBills: any[] = [];
   public today: any;
   public monthYear: string = '0';
@@ -25,6 +27,10 @@ export class HomeComponent implements OnInit {
   public selectedMonth: any;
   public selectedDate: string = 'Janeiro/2023';
   public isLoading: boolean = false;
+  public filterOptions: number = 0;
+  public filterName: string = 'Todas';
+  public isEditingEarnings: boolean = false;
+  public monthEarnings: number = 0;
 
   constructor(private firebaseService: FirebaseService) {}
 
@@ -49,7 +55,7 @@ export class HomeComponent implements OnInit {
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
     this.month = monthNames[this.date.getMonth()];      
     
-    this.getBills();
+    this.getBills(); 
   }
 
   public editMonth(): void {    
@@ -59,13 +65,34 @@ export class HomeComponent implements OnInit {
         document.getElementById("input-month")?.click();
       }, 100);
     } else {
-      if (this.monthYear === '') this.monthYear = `${this.year}-${this.monthNumber}`; 
-      console.log(this.monthYear);
-           
+      if (this.monthYear === '') this.monthYear = `${this.year}-${this.monthNumber}`;           
       this.isEditingMonth = false;
       this.selectedDate = this.formatDate(this.monthYear);
+      this.monthEarnings = 0;
       this.getBills();
     }
+  }
+
+  public saveEarnings(): void {
+    const dateParts = this.monthYear.split('-');
+    const year = dateParts[0];
+    const month = dateParts[1];
+    if (!this.monthEarnings) this.monthEarnings = 0;
+    let _data = {
+      earnings: this.monthEarnings
+    }
+    this.firebaseService.saveMonthEarnings(year, month, _data);
+    this.isEditingEarnings = false;
+  }
+  
+  public getEarnings(): void {
+    const dateParts = this.monthYear.split('-');
+    const year = dateParts[0];
+    const month = dateParts[1];
+    let _sub = this.firebaseService.getMonthEarnings(year, month).subscribe((data) => {        
+      _sub.unsubscribe();
+      this.monthEarnings = data.earnings;  
+    });
   }
 
   public getBills(): void {
@@ -86,7 +113,11 @@ export class HomeComponent implements OnInit {
           this.checkPaidBills();
         }, 100);
         _sub.unsubscribe();
+        //this.getEarnings();
         this.bills = data;
+        this.allBills = data;
+        this.filterOptions = 0;
+        this.filterName = 'Todas';
       })
   }
 
@@ -102,9 +133,31 @@ export class HomeComponent implements OnInit {
     } else return ``;
   }
 
+  public filterBills(): void {
+    if (this.filterOptions < 3) this.filterOptions++; else this.filterOptions = 0;
+    this.bills = this.allBills;
+    switch (this.filterOptions) {
+      case 0:
+        this.filterName = 'Todas';
+      break;
+      case 1:        
+        this.bills = this.bills.filter((element) => element.isPaid);
+        this.filterName = 'Contas Pagas';
+      break;
+      case 2:
+        this.bills = this.bills.filter((element) => !element.isPaid);
+        this.filterName = 'Contas em Aberto';
+      break;
+      case 3:
+        this.bills = this.bills.filter((element) => element.isExpired && !element.isPaid);
+        this.filterName = 'Contas em Atraso';
+      break;
+    }
+  }
+
   public createNewBill(): void {
     if (this.selectedDate === '') return;
-    this.bills.push({
+    this.bills.unshift({
       billName: '',
       billValue: '',
       billDate: this.today,
@@ -122,11 +175,11 @@ export class HomeComponent implements OnInit {
   public valueCalc(operation: 'paid' | 'unpaid'): number {
     if (this.selectedDate !== '') {
       let _total = 0;
-      this.bills.forEach((element) => {
+      this.allBills.forEach((element) => {
         if (operation === 'paid') {
-          if (element.isPaid) _total += element.billValue;
+          if (element.isPaid && !element.isEditing) _total += element.billValue;
         } else {
-          if (!element.isPaid) _total += element.billValue;
+          if (!element.isPaid && !element.isEditing) _total += element.billValue;
         }
       });
       _total.toString().replace('.', ',');
@@ -143,6 +196,5 @@ export class HomeComponent implements OnInit {
 
   public removeBill(index: number): void {
     this.bills.splice(index, 1);
-    //enviar dados para o firebase 
   }
 }

@@ -28,11 +28,21 @@
                 align-items: flex-start;
                 padding: 20px;
                 border-radius: 8px;
+                font-weight: 600;
                 width: auto;
                 height: auto;
-                background-color: var(--mid);    
-                color: white;  
+                background-color: var(--darkest);    
+                color: black;
                 gap: 4px; 
+
+                // .paid-total,
+                // .leftover {
+                //     color: var(--background);
+                // }
+
+                // .unpaid-total {
+                //     color: var(--background);
+                // }
             }
 
             .add-new-bill {
@@ -41,7 +51,7 @@
                 align-items: center;
                 justify-content: center;
                 margin-left: 20px;
-                color: var(--darkest);  
+                color: black;
 
                 p {
                     font-size: 12px;
@@ -73,8 +83,41 @@
             }
         }
 
+        .bills-filter {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            width: 80vw;
+            max-width: 500px;
+            padding: 4px;
+            color: black;
+
+            p {
+            font-size: 14px;
+            font-weight: 600;
+            }
+
+            mat-icon {
+                margin-left: 8px;                
+            }
+        }
+
         .no-bills {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
             padding-top: 40px;
+            font-weight: 600;
+            gap: 20px;
+            color: black;
+
+            mat-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 40px;
+            }
         }
 
         .content-header {
@@ -83,14 +126,14 @@
             margin-top: 6px;
 
             .selected-month {
-                color: var(--darkest);
+                color: black;
                 font-weight: 700;
-                font-size: 22px;
+                font-size: 26px;
             }
 
             mat-icon {
                 margin-left: 10px;
-                color: var(--darkest);
+                color: black;
 
                 &:hover {
                     cursor: pointer;
@@ -98,7 +141,35 @@
             }     
             
             input {
-                padding: 10px;
+                padding: 8px;
+                outline: black solid 1px;
+            }
+        }
+
+        .month-earnings {            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            height: 34px;
+            width: 100vw;
+            padding: 12px 0;
+            background-color: var(--darkest);
+
+            p {
+                font-size: 18px;
+                font-weight: 600; 
+                color: white;               
+            }
+
+            input {
+                padding: 8px;
+                max-width: 100px;
+            }
+
+            mat-icon {
+                margin-left: 10px;
+                color: var(--lightest);
             }
         }
 
@@ -118,5 +189,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        //background-color: rgba(black, 0.5);
     }
 }

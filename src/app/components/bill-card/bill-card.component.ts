@@ -1,3 +1,4 @@
+import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { BillData } from 'src/app/interfaces/bill-data';
@@ -18,7 +19,7 @@ export class BillCardComponent implements OnInit {
   public isEditing: boolean = false;
   public lockIcon: string = 'lock_open';
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private firebaseService: FirebaseService, private firebaseFirestore: AngularFirestore) {}
 
   @Input() public billData: BillData = {
     billName: '',
@@ -26,34 +27,15 @@ export class BillCardComponent implements OnInit {
     billDate: '',
     billPaidDate: '',
     isPaid: false,
-    isLocked: false,
     isEditing: true,
     isSaved: false,
+    isExpired: false,
+    createdAt: 0,
     id: ''
   }
 
   ngOnInit(): void {
-    if (this.billData.isLocked)
-    this.lockIcon = 'lock';
-    else this.lockIcon === 'lock_open';
-  }
-
-  public billLockToggle(): void {
-    if (this.lockIcon === 'lock') {
-    this.lockIcon = 'lock_open';
-    this.billData.isLocked = false; 
-    const dateParts = this.selectedPeriod.split('-');
-    const year = dateParts[0];
-    const month = dateParts[1];
-    this.firebaseService.updateBill(year, month, this.billData.id, this.billData);
-    } else {
-      this.lockIcon = 'lock';
-      this.billData.isLocked = true; 
-      const dateParts = this.selectedPeriod.split('-');
-      const year = dateParts[0];
-      const month = dateParts[1];
-      this.firebaseService.updateBill(year, month, this.billData.id, this.billData);
-    }
+    this.compareDates();        
   }
 
   public billPaid(): void {
@@ -69,27 +51,50 @@ export class BillCardComponent implements OnInit {
     this.billData.isEditing = true;
   }
 
-  public saveEdit(billId: string): void {   
-    if (this.billData.billValue > 0) {   
-
+  public async saveEdit(billId: string) {   
+    if (this.billData.billValue > 0) {
       if (this.billData.billName === '') {
         this.billData.billName = '(nova conta)'
       }
-
       this.billData.isEditing = false;
       this.formatDate();
       const dateParts = this.selectedPeriod.split('-');
       const year = dateParts[0];
       const month = dateParts[1];
-      if (this.billData.isSaved && this.billData.id) this.firebaseService.updateBill(year, month, billId, this.billData);
-      else {
+      if (this.billData.isSaved && this.billData.id) {
+        this.firebaseService.updateBill(year, month, billId, this.billData);
+        this.compareDates();
+      } else {
         this.billData.isSaved = true;
-        this.firebaseService.createBill(year, month, this.billData);
-        setTimeout(() => {
-          location.reload();
-        }, 1000);        
+        this.billData.createdAt = new Date().getTime();        
+       
+        let userUid = localStorage.getItem('user');
+        if (!userUid) return;
+        await this.firebaseFirestore.collection('Users').doc(userUid).collection('Years').doc(year)
+        .collection('Months').doc(month).collection('Bills').add(this.billData).then(async data => {
+          let _vini = data.id; 
+          this.billData.id = _vini;    
+        });
+                
+        this.compareDates();
       }
     }    
+  }
+
+  public compareDates(): void {
+    var _billDate = this.billData.billDate;
+    var _billDateParts = _billDate.split("/");
+    _billDate = _billDateParts[1] + "/" + _billDateParts[0] + "/" + _billDateParts[2];
+    var _billDateTime = new Date(_billDate);
+
+    var _billDatePaid = this.billData.billPaidDate;
+    var _billDatePaidParts = _billDatePaid.split("/");
+    _billDatePaid = _billDatePaidParts[1] + "/" + _billDatePaidParts[0] + "/" + _billDatePaidParts[2];
+    var _billDatePaidTime = new Date(_billDatePaid);
+    
+    if (_billDatePaidTime.getTime() >  _billDateTime.getTime())
+    this.billData.isExpired = true;
+    else this.billData.isExpired = false;
   }
 
   public formatDate(): void {
@@ -98,7 +103,7 @@ export class BillCardComponent implements OnInit {
   }
 
   public deleteBill(): void {
-    if (this.billData.isLocked) return;
+    // if (this.billData.isLocked) return;
     this.deleteEmitter.emit();
     const dateParts = this.selectedPeriod.split('-');
     const year = dateParts[0];

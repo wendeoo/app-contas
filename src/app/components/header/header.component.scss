@@ -11,20 +11,28 @@
         align-items: center;
         justify-content: space-between;   
         width: 90%;     
-        height: 64px;
-        padding: 0 14px;
-        color: white;
-        font-weight: 500;
+        height: 40px;
+        padding: 10px 14px 0 14px;
+        color: black;
+        font-weight: 700;
         font-size: 16px;
     }
 
     .today {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
-        margin-bottom: 16px;
+        width: 90%;
+        margin-bottom: 18px;
         font-size: 12px;
         font-weight: 600;
-        color: var(--lightest);
+        color: black;
+    }
+
+    .members {
+        font-size: 12px;
+        padding-bottom: 8px;
+        font-weight: 700;
+        color: black;
     }
 }

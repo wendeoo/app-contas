@@ -10,23 +10,33 @@
                 <mat-icon *ngIf="isEditingMonth">save</mat-icon>
             </div>
         </div>
+        <!-- <div class="month-earnings">
+            <input type="number" *ngIf="isEditingEarnings" [(ngModel)]="monthEarnings">
+            <p *ngIf="!isEditingEarnings">Ganhos do Mês: R{{ monthEarnings | currency }}</p>
+            <div class="earnings-save">
+                <mat-icon *ngIf="!isEditingEarnings" (click)="isEditingEarnings = true">edit</mat-icon>
+                <mat-icon *ngIf="isEditingEarnings" (click)="saveEarnings()">save</mat-icon>
+            </div>
+        </div> -->
         <div class="expenses">
             <div class="month-expenses">
-                <div class="paid-total">Total pago: R{{ valueCalc('paid') | currency }}</div>
-                <div class="unpaid-total">Saldo devedor: R{{ valueCalc('unpaid') | currency }}</div>
+                <div class="paid-total">Total Pago: R{{ valueCalc('paid') | currency }}</div>
+                <!-- <div class="leftover">Saldo Ganhos: R{{ monthEarnings - valueCalc('paid') | currency }}</div> -->
+                <div class="unpaid-total">Em Aberto: R{{ valueCalc('unpaid') | currency }}</div>
             </div>
             <div class="add-new-bill">
                 <p>Nova Conta</p>
                 <mat-icon (click)="createNewBill()">note_add</mat-icon>
             </div> 
         </div>
-        <div class="bills-amount" *ngIf="selectedDate !== ''">
-            <mat-icon>assignment</mat-icon>            
-            <p>{{ ' ' + bills.length + ' / '}}<p>
-            <mat-icon>assignment_turned_in</mat-icon> 
-            <p>{{ ' ' + paidBills.length }}</p>
+        <div class="bills-filter">
+            <p (click)="filterBills()">{{ filterName }}</p>
+            <mat-icon (click)="filterBills()">filter_list</mat-icon>
         </div>
-        <div class="no-bills" *ngIf="!bills.length && !isLoading">Não há contas cadastradas para este mês.</div>
+        <div class="no-bills" *ngIf="!allBills.length && !isLoading">
+            <mat-icon>error_outline</mat-icon>
+            Não há contas cadastradas<br>para o mês selecionado.
+        </div>
         <div class="cards" *ngIf="selectedDate !== ''">
             <app-bill-card
                 *ngFor="let bill of bills; let i = index"

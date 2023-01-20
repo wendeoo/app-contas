@@ -1,12 +1,12 @@
 <div class="bill-card" [class.bill-paid]="billData.isPaid" [class.bill-editing]="billData.isEditing">
-    <div class="lock" [class.bill-editing]="billData.isEditing">
-        <mat-icon (click)="billLockToggle()">{{ lockIcon }}</mat-icon>
-        <!-- <p *ngIf="billData.isLocked">Conta fixa</p> -->
-    </div>
     <div class="bill-header">
         <div *ngIf="!billData.isEditing" class="bill-value">R{{ billData.billValue | currency }}</div>
         <input *ngIf="billData.isEditing" type="number" class="value-input" [(ngModel)]="billData.billValue" placeholder="R$ 0,00">
-        <div *ngIf="!billData.isEditing" class="bill-date" [class.date-paid]="billData.isPaid">Venc. {{ billData.billDate }}</div>
+        <div *ngIf="!billData.isEditing"
+            class="bill-date"
+            [class.date-paid]="billData.isPaid"            
+            >Venc. {{ billData.billDate }}
+        </div>
         <div class="editing-date" *ngIf="billData.isEditing">
             <label>Venc.</label>
             <input type="date" class="date-input" [(ngModel)]="billData.billDate">
@@ -19,15 +19,20 @@
     <div class="bill-bottom">
         <div class="payment-info">
             <input id="checkbox-paid" [disabled]="billData.isEditing" type="checkbox" [(ngModel)]="billData.isPaid" (click)="billPaid()">
-            <label *ngIf="!billData.isEditing && !billData.isPaid">Confirmar pagamento</label>
-            <p class="paid-notice" *ngIf="!billData.isEditing && billData.isPaid">Paga em {{ billData.billPaidDate }}</p>
+            <label *ngIf="!billData.isEditing && !billData.isPaid">Tá pago!</label>
+            <p class="paid-notice" *ngIf="!billData.isEditing && billData.isPaid"
+            >Pago em {{ billData.billPaidDate }}</p>
+            <div *ngIf="!billData.isEditing && billData.isExpired && !billData.isPaid" class="expired-notice">
+                <mat-icon>access_time</mat-icon>
+                <p>atraso</p>
+            </div>
             <input *ngIf="billData.isEditing && billData.isPaid" type="date" class="paid-date-input" [(ngModel)]="billData.billPaidDate">
         </div>
         <div class="icons">
             <div *ngIf="!billData.isEditing">
                 <mat-icon (click)="billEdit()" class="bill-edit">edit</mat-icon>
             </div> 
-            <div class="delete" [class.disabled]="billData.isLocked" *ngIf="billData.isEditing" (click)="deleteBill()">
+            <div class="delete" *ngIf="billData.isEditing" (click)="deleteBill()">
                 <p>Deletar</p>
                 <mat-icon [class.bill-editing]="billData.isEditing" class="bill-delete">delete_forever</mat-icon>
             </div>            

@@ -4,8 +4,9 @@ export interface BillData {
     billDate: string,
     billPaidDate: string,
     isPaid: boolean,
-    isLocked: boolean,
     isEditing: boolean,
     isSaved: boolean,
+    isExpired: boolean,
+    createdAt: number,
     id: string
 }

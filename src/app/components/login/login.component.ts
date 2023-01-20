@@ -107,7 +107,7 @@ export class LoginComponent implements OnInit {
       } else {
         this.isLoading = false;
       this.hasError = true;  
-      this.errorMessage = this.firebaseService.errorMessage;  
+      this.errorMessage = this.firebaseService.errorMessage;
       } 
     } else {
       this.isLoading = false;

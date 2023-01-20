@@ -1,8 +1,11 @@
 <div class="container">
     <div class="main">
         <app-loader *ngIf="isLoading"></app-loader>
+        <div class="app-logo">
+            <img src="assets/billHive.png">
+        </div>
         <div *ngIf="isLoginScreen && !isResettingPassword && !isLoading" class="login-box">
-            <div class="login-title">Entrar</div>
+            <!-- <div class="login-title">Entrar</div> -->
             <form class="login-form" [formGroup]="formLogin">
                 <label for="emailLogin">email</label>
                 <input (click)="hasError = false" class="emailLogin" id="emailLogin" formControlName="emailLogin" class="emailLogin" type="text" #emailLogin>
@@ -18,7 +21,7 @@
             <div *ngIf="hasError" class="error"> {{ errorMessage }} </div>
         </div>
         <div *ngIf="!isLoginScreen && !isResettingPassword && !isLoading" class="register-box">
-            <div class="register-title">Criar Conta</div>
+            <!-- <div class="register-title">Criar Conta</div> -->
             <form class="register-form" [formGroup]="formRegister">
                 <label for="nameRegister">nome</label>
                 <input (click)="hasError = false" class="nameRegister" formControlName="nameRegister" type="text" [maxlength]="15" #nameRegister>
@@ -35,7 +38,7 @@
             <div *ngIf="hasError" class="error"> {{ errorMessage }} </div>
         </div>
         <div *ngIf="isResettingPassword && !isLoading" class="password-reset-box">
-            <div class="reset-title">Recuperar Senha</div>
+            <!-- <div class="reset-title">Recuperar Senha</div> -->
             <label for="emailReset">email cadastrado</label>
             <input (click)="hasError = false" class="emailReset" id="emailReset" type="text" #emailReset>
             <button type="button" class="btn-send" (click)="sendResetPasswordLink(emailReset.value)">ENVIAR</button>

@@ -22,7 +22,7 @@
             color: black;
         }
 
-        p {
+        p {            
             font-size: 12px;
             padding-left: 6px;
         }
@@ -71,6 +71,10 @@
             &.date-paid {
                 color: var(--bill-date-paid);
             }
+
+            &.date-expired {
+                color: var(--error-red);
+            }
         }
 
         .editing-date {
@@ -113,7 +117,7 @@
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        margin-top: 14px;
+        margin-top: 10px;
 
         .payment-info {
             display: flex;
@@ -145,6 +149,18 @@
                 color: black;
                 font-size: 14px;
                 margin-left: 10px;           
+            }
+
+            .expired-notice {
+                display: flex; 
+                align-items: center;               
+                color: var(--bill-date-unpaid);
+                font-size: 14px;
+                margin-left: 10px; 
+                
+                p {
+                    margin-left: 8px;
+                }
             }
         }
 

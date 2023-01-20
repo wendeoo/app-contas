@@ -94,17 +94,25 @@ export class FirebaseService {
     return this.firebaseFirestore.collection('Users').doc(userUid).valueChanges();
   }
 
-  public createBill(year: string, month: string, billData: any): void {
+  
+
+  public saveMonthEarnings(year: string, month: string, value: any): void { 
     let userUid = localStorage.getItem('user');
     if (!userUid) return;
     this.firebaseFirestore.collection('Users').doc(userUid).collection('Years').doc(year)
-    .collection('Months').doc(month).collection('Bills').add(billData);
+    .collection('Months').doc(month).collection('Earnings').doc('Earnings').set(value);
+  }
+
+  public getMonthEarnings(year: string, month: string): Observable<any> { 
+    let userUid = localStorage.getItem('user');
+    return this.firebaseFirestore.collection('Users').doc(userUid!).collection('Years').doc(year)
+    .collection('Months').doc(month).collection('Earnings').doc('Earnings').valueChanges();
   }
 
   public getBills(year: string, month: string): Observable<any> {
     let userUid = localStorage.getItem('user');
     return this.firebaseFirestore.collection('Users').doc(userUid!).collection('Years').doc(year)
-    .collection('Months').doc(month).collection('Bills').snapshotChanges();
+    .collection('Months').doc(month).collection('Bills', (ref) => ref.orderBy('createdAt', 'desc')).snapshotChanges();
   }
 
   public updateBill(year: string, month: string, billId: string, billData: any): void {
