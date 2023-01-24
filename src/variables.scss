@@ -1,10 +1,89 @@
 :root
 {
-    --darkest:  #ffd42a;
-    --mid: #8C2F39;
-    --lightest:  #ff7d8c;
-    --background: #fdfcec;
-    --button: #ffd42a;
+    .default {
+        --darkest:  #425c81;
+        --mid: #81c9ad;
+        --lightest:  #e4e4e4;
+        --background: #f2f2f2;
+        --button: #aee5d0;
+        --font: black; 
+        --font-header: white; 
+        --font-expenses: black;
+        --font-options-box: black;      
+    }
+
+    .warm {
+        --darkest:  #b51d46;
+        --mid: #ffc16e;
+        --lightest:  #ff7d8c;
+        --background: #fcf5e5;
+        --button: #fdb14e;
+        --font: black;
+        --font-header: white;
+        --font-expenses: black;
+        --font-options-box: black;
+    }
+
+    .ice {
+        --darkest:  #4fa4f4;
+        --mid: #c8e3f6;
+        --lightest:  #f0f5fb;
+        --background: #fafafa;
+        --button: #8ac6ff;
+        --font: black;
+        --font-header: white;
+        --font-expenses: black;
+        --font-options-box: black;
+    }
+
+    .money {
+        --darkest:  #194e48;
+        --mid: #98ba7d;
+        --lightest:  #d6efc7;
+        --background: #fafafa;
+        --button: #fbd686;
+        --font: black;
+        --font-header: white;
+        --font-expenses: rgb(59, 59, 59);
+        --font-options-box: black;
+    }
+
+    .cute {
+        --darkest:  #df5297;
+        --mid: #e985b7;
+        --lightest:  #f2bad5;
+        --background: #fbeef5;
+        --button: #ff9fcd;
+        --font: black;
+        --font-header: white;
+        --font-expenses: white;
+        --font-options-box: black;
+    }
+    
+    .grass {
+        --darkest:  #344E41;
+        --mid: #3A5A40;
+        --lightest:  #588157;
+        --background: #DAD7CD;
+        --button: #A3B18A;
+        --font: black;
+        --font-header: white;
+        --font-expenses: white;
+        --font-options-box: white;
+    }
+
+    .business {
+        --darkest:  #1F2232;
+        --mid: #596475;
+        --lightest:  #BC9EC1;
+        --background: #dbe1e9;
+        --button: #9fadff;
+        --font: black;
+        --font-header: white;
+        --font-expenses: white;
+        --font-options-box: white;
+    }
+
     --button-hover: #20dfaf;
 
     --error-red: #a4031f;

@@ -1,6 +1,7 @@
-<div class="container">
-    <app-header [weekDay]="weekDay" [day]="day" [month]="month" [year]="year"></app-header>
-    <div class="content">        
+<div class="container" [ngClass]="theme">
+    <app-header [theme]="theme" [weekDay]="weekDay" [day]="day" [month]="month" [year]="year"
+    (settingsEmitter)="goToSettings()"></app-header>
+    <div class="content" *ngIf="!isLoading && !isSettings">
         <div class="content-header">
             <div *ngIf="selectedDate === ''" class="selected-month"></div>
             <div *ngIf="!isEditingMonth" class="selected-month">{{ selectedDate }}</div>
@@ -20,9 +21,9 @@
         </div> -->
         <div class="expenses">
             <div class="month-expenses">
-                <div class="paid-total">Total Pago: R{{ valueCalc('paid') | currency }}</div>
+                <div class="paid-total">Total Pago: <strong>R{{ valueCalc('paid') | currency }}</strong></div>
                 <!-- <div class="leftover">Saldo Ganhos: R{{ monthEarnings - valueCalc('paid') | currency }}</div> -->
-                <div class="unpaid-total">Em Aberto: R{{ valueCalc('unpaid') | currency }}</div>
+                <div class="unpaid-total">Em Aberto: <strong>R{{ valueCalc('unpaid') | currency }}</strong></div>
             </div>
             <div class="add-new-bill">
                 <p>Nova Conta</p>
@@ -30,12 +31,12 @@
             </div> 
         </div>
         <div class="bills-filter">
+            <mat-icon (click)="filterBills()">refresh</mat-icon>
             <p (click)="filterBills()">{{ filterName }}</p>
-            <mat-icon (click)="filterBills()">filter_list</mat-icon>
         </div>
         <div class="no-bills" *ngIf="!allBills.length && !isLoading">
             <mat-icon>error_outline</mat-icon>
-            Não há contas cadastradas<br>para o mês selecionado.
+            Não há contas cadastradas<br>para o mês selecionado
         </div>
         <div class="cards" *ngIf="selectedDate !== ''">
             <app-bill-card
@@ -48,6 +49,36 @@
             </app-bill-card>
         </div>       
     </div>
-    <div class="loader" *ngIf="isLoading"><app-loader></app-loader></div>    
-    <app-footer></app-footer>
+    <div class="options-container" *ngIf="!isLoading && isSettings">
+        <div class="options-title">Opções</div>
+        <div class="options-box">
+            <div class="options-name">
+                <p class="name-change" *ngIf="!isEditingName">Alterar Nome:</p>
+                <p class="name-change" *ngIf="isEditingName">Novo Nome:</p>
+                <p class="current-name" *ngIf="!isEditingName">{{ userName }}</p>
+                <input class="input-edit-name" type="text" *ngIf="isEditingName" [(ngModel)]="newName" maxlength="15" placeholder="{{userName}}">
+                <mat-icon class="icon-edit" *ngIf="!isEditingName" (click)="isEditingName = true">edit</mat-icon>
+                <mat-icon class="icon-edit" *ngIf="isEditingName" (click)="saveName()">save</mat-icon>
+            </div>          
+            <div class="theme-selector">
+                <p>Tema:</p>
+                <div class="selector">
+                    <select #themeSelector (change)="getValue(themeSelector.value)" [(ngModel)]="this.theme">
+                        <option value="default">Padrão</option>
+                        <option value="warm">Quente</option>
+                        <option value="ice">Frio</option>
+                        <option value="money">Dinheiro</option>
+                        <option value="cute">Doce</option>
+                        <option value="grass">Natureza</option>
+                        <option value="business">Negócios</option>
+                    </select>
+                </div>
+        </div>
+        </div>
+        <div class="exit-app">
+            <a (click)="logout()">Sair do App <mat-icon>exit_to_app</mat-icon></a>
+        </div>
+    </div> 
+    <div class="loader" *ngIf="isLoading"><app-loader></app-loader>   
 </div>
+<app-footer [theme]="theme" *ngIf="!isLoading"></app-footer>

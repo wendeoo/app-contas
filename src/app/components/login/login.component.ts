@@ -8,7 +8,7 @@ import { FirebaseService } from 'src/app/services/firebase.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit {  
 
   public isLoginScreen: boolean = true;
   public isResettingPassword: boolean = false;
@@ -19,12 +19,22 @@ export class LoginComponent implements OnInit {
   public isLoading: boolean = false;
   public backArrows: string = '  <<';
   public forwardArrows: string = '>>  ';
+  public theme: string = '';
 
   constructor(
     public firebaseService: FirebaseService,
-    public router: Router, private formBuilder: FormBuilder) {}
+    public router: Router,
+    private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
+
+    let _theme = localStorage.getItem('selectedTheme');
+    if (_theme) {
+      this.theme = _theme;
+    } else {
+      this.theme = 'default';
+    }
+
     if (localStorage.getItem('user') !== null) {
       this.router.navigate(['home']);
     } else {

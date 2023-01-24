@@ -61,26 +61,26 @@ export class FirebaseService {
 
   public async signUp(email: string, password: string, name: string) {
     await this.firebaseAuth.createUserWithEmailAndPassword(email, password)
-      .then(async res => {
-        this.isSignedIn = true;
-        await this.firebaseFirestore.collection('Users').doc(res?.user?.uid).set({
-          name
-        });
-        localStorage.setItem('user', res?.user?.uid!);   
-        return res?.user?.uid;
-      }, (err) => {
-        switch (err.code) {
-          case 'auth/email-already-in-use':
-            this.errorMessage = 'Email já cadastrado.';
-          break;
-          case 'auth/invalid-email':
-            this.errorMessage = 'Email inválido.';
-          break;
-          case 'auth/too-many-requests':
-            this.errorMessage = 'Tentativas de login excedidas. Por favor aguarde.';  
-          break;
-        }
-      })   
+    .then(async res => {
+      this.isSignedIn = true;
+      await this.firebaseFirestore.collection('Users').doc(res?.user?.uid).set({
+        name
+      });
+      localStorage.setItem('user', res?.user?.uid!);
+      return res?.user?.uid;
+    }, (err) => {
+      switch (err.code) {
+        case 'auth/email-already-in-use':
+          this.errorMessage = 'Email já cadastrado.';
+        break;
+        case 'auth/invalid-email':
+          this.errorMessage = 'Email inválido.';
+        break;
+        case 'auth/too-many-requests':
+          this.errorMessage = 'Tentativas de login excedidas. Por favor aguarde.';  
+        break;
+      }
+    })
   }
 
   public logout(): void {
@@ -93,14 +93,18 @@ export class FirebaseService {
     if (!userUid) return;    
     return this.firebaseFirestore.collection('Users').doc(userUid).valueChanges();
   }
-
   
-
   public saveMonthEarnings(year: string, month: string, value: any): void { 
     let userUid = localStorage.getItem('user');
     if (!userUid) return;
     this.firebaseFirestore.collection('Users').doc(userUid).collection('Years').doc(year)
     .collection('Months').doc(month).collection('Earnings').doc('Earnings').set(value);
+  }
+
+  public updateName(newName: string): void {
+    let userUid = localStorage.getItem('user');
+    if (!userUid) return;
+    this.firebaseFirestore.collection('Users').doc(userUid).update({name: newName});
   }
 
   public getMonthEarnings(year: string, month: string): Observable<any> { 

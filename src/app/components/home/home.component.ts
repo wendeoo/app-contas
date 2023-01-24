@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Component, OnInit, Output } from '@angular/core';
 import { map } from 'rxjs';
@@ -31,10 +32,22 @@ export class HomeComponent implements OnInit {
   public filterName: string = 'Todas';
   public isEditingEarnings: boolean = false;
   public monthEarnings: number = 0;
+  public isSettings: boolean = false;
+  public userName: string = '';
+  public newName: string = '';
+  public isEditingName: boolean = false;
+  public theme: string = '';
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(
+    private firebaseService: FirebaseService,
+    private router: Router
+    ) {}
 
   ngOnInit(): void {
+
+    let _theme = localStorage.getItem('selectedTheme');
+    if (_theme) this.theme = _theme;
+    else this.theme = 'default';
 
     let _now = new Date().getTime();
     let _date = new Date(_now);
@@ -56,6 +69,7 @@ export class HomeComponent implements OnInit {
     this.month = monthNames[this.date.getMonth()];      
     
     this.getBills(); 
+    this.getUserData();
   }
 
   public editMonth(): void {    
@@ -71,6 +85,12 @@ export class HomeComponent implements OnInit {
       this.monthEarnings = 0;
       this.getBills();
     }
+  }
+
+  public getUserData() {
+    this.firebaseService.getUserData()?.subscribe((data) => {
+      this.userName = data.name;
+    })
   }
 
   public saveEarnings(): void {
@@ -196,5 +216,25 @@ export class HomeComponent implements OnInit {
 
   public removeBill(index: number): void {
     this.bills.splice(index, 1);
+  }
+
+  public goToSettings(): void {
+    this.isSettings = !this.isSettings;
+  }
+
+  public saveName(): void {
+    this.isEditingName = false;
+    if (this.newName) this.firebaseService.updateName(this.newName);
+  }
+
+  public getValue(val: string): void {
+    this.theme = val;    
+    localStorage.setItem('selectedTheme', val);
+  }
+
+  public logout(): void {
+    this.firebaseService.isSignedIn = false;
+    this.firebaseService.logout();    
+    this.router.navigate(['login']);
   }
 }

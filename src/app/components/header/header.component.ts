@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-header',
@@ -13,9 +13,12 @@ export class HeaderComponent implements OnInit {
   @Input() public day: number = 0;
   @Input() public month: string = '';
   @Input() public year: number = 0;
+  @Input() public theme: any;
+  @Output() public settingsEmitter: EventEmitter<any> = new EventEmitter();
 
   public userName: string = '';
   public loadingData: boolean = false;
+  public isSettings: boolean = false;
 
   constructor(
     public firebaseService: FirebaseService,
@@ -27,13 +30,13 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.hour = this.date.getHours();
-   if (this.hour >= 6 && this.hour <= 11)
+    if (this.hour >= 6 && this.hour <= 11)
     this.greetingMessage = 'Bom dia, ';
     else if (this.hour >= 12 && this.hour <= 18)
     this.greetingMessage = 'Boa tarde, ';
     else this.greetingMessage = 'Boa Noite, ';
 
-    if (localStorage.getItem('user') != null) this.getUserData();
+    if (localStorage.getItem('user')) this.getUserData();
   } 
 
   public getUserData() {
@@ -42,11 +45,10 @@ export class HeaderComponent implements OnInit {
       this.userName = data.name;
       this.loadingData = false;
     })
-  }
+  } 
 
-  public logout(): void {
-    this.firebaseService.isSignedIn = false;
-    this.firebaseService.logout();    
-    this.router.navigate(['login']);
+  public goToSettings(): void {
+    this.isSettings = !this.isSettings;
+    this.settingsEmitter.emit();
   }
 }

@@ -53,14 +53,17 @@ export class BillCardComponent implements OnInit {
 
   public async saveEdit(billId: string) {   
     if (this.billData.billValue > 0) {
+
       if (this.billData.billName === '') {
         this.billData.billName = '(nova conta)'
       }
+
       this.billData.isEditing = false;
       this.formatDate();
       const dateParts = this.selectedPeriod.split('-');
       const year = dateParts[0];
       const month = dateParts[1];
+      
       if (this.billData.isSaved && this.billData.id) {
         this.firebaseService.updateBill(year, month, billId, this.billData);
         this.compareDates();

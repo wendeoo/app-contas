@@ -13,26 +13,29 @@
         width: 90%;     
         height: 40px;
         padding: 10px 14px 0 14px;
-        color: black;
+        color: var(--font-header);
         font-weight: 700;
         font-size: 16px;
     }
 
     .today {
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
         width: 90%;
         margin-bottom: 18px;
         font-size: 12px;
         font-weight: 600;
-        color: black;
+        color: var(--font-header);
     }
 
     .members {
+        background-color: var(--mid);
+        text-align: center;
         font-size: 12px;
-        padding-bottom: 8px;
+        padding: 8px 0 8px 0;
         font-weight: 700;
+        width: 100%;
         color: black;
     }
 }
