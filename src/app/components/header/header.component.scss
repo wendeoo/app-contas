@@ -15,7 +15,7 @@
         padding: 10px 14px 0 14px;
         color: var(--font-header);
         font-weight: 700;
-        font-size: 16px;
+        font-size: 18px;
     }
 
     .today {
@@ -24,7 +24,7 @@
         align-items: center;
         width: 90%;
         margin-bottom: 18px;
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 600;
         color: var(--font-header);
     }
@@ -36,6 +36,6 @@
         padding: 8px 0 8px 0;
         font-weight: 700;
         width: 100%;
-        color: black;
+        color: var(--font-header);
     }
 }

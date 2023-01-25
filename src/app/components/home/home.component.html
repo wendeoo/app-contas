@@ -11,32 +11,23 @@
                 <mat-icon *ngIf="isEditingMonth">save</mat-icon>
             </div>
         </div>
-        <!-- <div class="month-earnings">
-            <input type="number" *ngIf="isEditingEarnings" [(ngModel)]="monthEarnings">
-            <p *ngIf="!isEditingEarnings">Ganhos do Mês: R{{ monthEarnings | currency }}</p>
-            <div class="earnings-save">
-                <mat-icon *ngIf="!isEditingEarnings" (click)="isEditingEarnings = true">edit</mat-icon>
-                <mat-icon *ngIf="isEditingEarnings" (click)="saveEarnings()">save</mat-icon>
-            </div>
-        </div> -->
         <div class="expenses">
             <div class="month-expenses">
-                <div class="paid-total">Total Pago: <strong>R{{ valueCalc('paid') | currency }}</strong></div>
-                <!-- <div class="leftover">Saldo Ganhos: R{{ monthEarnings - valueCalc('paid') | currency }}</div> -->
-                <div class="unpaid-total">Em Aberto: <strong>R{{ valueCalc('unpaid') | currency }}</strong></div>
+                <div class="paid-total">Total Pago: <strong>{{ valueCalc('paid') }}</strong></div>
+                <div class="unpaid-total">Em Aberto: <strong>{{ valueCalc('unpaid') }}</strong></div>
             </div>
             <div class="add-new-bill">
                 <p>Nova Conta</p>
                 <mat-icon (click)="createNewBill()">note_add</mat-icon>
             </div> 
         </div>
-        <div class="bills-filter">
+        <div class="bills-filter" *ngIf="allBills.length">
             <mat-icon (click)="filterBills()">refresh</mat-icon>
             <p (click)="filterBills()">{{ filterName }}</p>
         </div>
-        <div class="no-bills" *ngIf="!allBills.length && !isLoading">
+        <div class="no-bills" *ngIf="!allBills.length">
             <mat-icon>error_outline</mat-icon>
-            Não há contas cadastradas<br>para o mês selecionado
+            Não há contas cadastradas<br>para o mês selecionado.
         </div>
         <div class="cards" *ngIf="selectedDate !== ''">
             <app-bill-card
@@ -64,19 +55,30 @@
                 <p>Tema:</p>
                 <div class="selector">
                     <select #themeSelector (change)="getValue(themeSelector.value)" [(ngModel)]="this.theme">
-                        <option value="default">Padrão</option>
-                        <option value="warm">Quente</option>
-                        <option value="ice">Frio</option>
-                        <option value="money">Dinheiro</option>
-                        <option value="cute">Doce</option>
-                        <option value="grass">Natureza</option>
+                        <option value="default" >Padrão</option>
+                        <option value="warm"    >Quente</option>
+                        <option value="ice"     >Frio</option>
+                        <option value="money"   >Dinheiro</option>
+                        <option value="cute"    >Doce</option>
+                        <option value="grass"   >Natureza</option>
                         <option value="business">Negócios</option>
                     </select>
                 </div>
-        </div>
+            </div>
+            <div class="invitation-area">
+                <p>Convidar:</p>
+                <input class="input-invite-email" type="text" [(ngModel)]="inviteEmail" placeholder="email do convidado">
+                <mat-icon (click)="checkEmailRegistration(inviteEmail)">send</mat-icon>                
+            </div>
+            <div class="change-database">
+                <select #changeDatabase (change)="changeMyDatabase(changeDatabase.value)">
+                    <option selected disabled>Escolha o Banco de Dados</option>
+                    <option value="{{myDBs[i]}}" *ngFor="let db of myDBs; let i = index">{{ myDBs[i] }}</option>
+                </select>
+            </div>
         </div>
         <div class="exit-app">
-            <a (click)="logout()">Sair do App <mat-icon>exit_to_app</mat-icon></a>
+            <a (click)="logout()">Sair da Conta<mat-icon>exit_to_app</mat-icon></a>
         </div>
     </div> 
     <div class="loader" *ngIf="isLoading"><app-loader></app-loader>   

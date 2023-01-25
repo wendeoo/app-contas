@@ -2,6 +2,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Component, Output, EventEmitter, Input, OnInit } from '@angular/core';
 import { BillData } from 'src/app/interfaces/bill-data';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-bill-card',
@@ -35,7 +36,17 @@ export class BillCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.compareDates();        
+    this.compareDates();  
+    this.formattedBillValue;
+  }
+
+  get formattedBillValue(): string {
+    const formatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2
+    });
+    return formatter.format(this.billData.billValue);
   }
 
   public billPaid(): void {
@@ -73,12 +84,10 @@ export class BillCardComponent implements OnInit {
        
         let userUid = localStorage.getItem('user');
         if (!userUid) return;
-        await this.firebaseFirestore.collection('Users').doc(userUid).collection('Years').doc(year)
+        await this.firebaseFirestore.collection('Database').doc(userUid).collection('Years').doc(year)
         .collection('Months').doc(month).collection('Bills').add(this.billData).then(async data => {
-          let _vini = data.id; 
-          this.billData.id = _vini;    
-        });
-                
+          this.billData.id = data.id;  
+        });                
         this.compareDates();
       }
     }    
@@ -106,7 +115,6 @@ export class BillCardComponent implements OnInit {
   }
 
   public deleteBill(): void {
-    // if (this.billData.isLocked) return;
     this.deleteEmitter.emit();
     const dateParts = this.selectedPeriod.split('-');
     const year = dateParts[0];

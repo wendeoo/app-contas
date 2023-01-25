@@ -1,7 +1,11 @@
+import { DatabaseMembers } from './../../interfaces/database-members';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase.service';
 import { Component, OnInit, Output } from '@angular/core';
 import { map } from 'rxjs';
+import { DocumentSnapshot, QuerySnapshot } from 'firebase/firestore';
 
 @Component({
   selector: 'app-home',
@@ -37,10 +41,18 @@ export class HomeComponent implements OnInit {
   public newName: string = '';
   public isEditingName: boolean = false;
   public theme: string = '';
+  public isEmailRegistered: boolean = false;
+  public inviteEmail: string = '';
+  public inviteUid: string = ';'
+  public inviteErrorMessage: string = '';
+  public myDBs: string[] = [];
+  public selectedDatabase: any;
 
   constructor(
     private firebaseService: FirebaseService,
-    private router: Router
+    private firebaseFirestore: AngularFirestore,
+    private router: Router,
+    private firebaseAuth: AngularFireAuth
     ) {}
 
   ngOnInit(): void {
@@ -48,26 +60,8 @@ export class HomeComponent implements OnInit {
     let _theme = localStorage.getItem('selectedTheme');
     if (_theme) this.theme = _theme;
     else this.theme = 'default';
-
-    let _now = new Date().getTime();
-    let _date = new Date(_now);
-    let _month = _date.getMonth()+1;
-    if (_month <= 9) this.month = '0' + _month;
-    this.today = _date.getDate()+'/'+this.month+'/'+_date.getFullYear();   
-    this.year = this.date.getFullYear();     
-    this.monthYear = `${this.year}-${this.month}`;
-    this.monthNumber = this.month;
-    
-    const weekNames = ['Domingo', 'Segunda-feira', 'Terça-feira',
-    'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
-    this.weekDay = weekNames[this.date.getDay()];
-
-    this.day = this.date.getDate();
        
-    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    this.month = monthNames[this.date.getMonth()];      
-    
+    this.init();
     this.getBills(); 
     this.getUserData();
   }
@@ -87,40 +81,60 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  public init(): void {
+
+    let _now = new Date().getTime();
+    let _date = new Date(_now);
+    let _month = _date.getMonth()+1;
+    if (_month <= 9) this.month = '0' + _month;
+    this.today = _date.getDate()+'/'+this.month+'/'+_date.getFullYear();   
+    this.year = this.date.getFullYear();     
+    this.monthYear = `${this.year}-${this.month}`;
+    this.monthNumber = this.month;
+    
+    const weekNames = ['Domingo', 'Segunda-feira', 'Terça-feira',
+    'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+    this.weekDay = weekNames[this.date.getDay()];
+
+    this.day = this.date.getDate();
+       
+    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+    'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    this.month = monthNames[this.date.getMonth()]; 
+  
+    this.getMyDatabases();
+  }
+
+  public getMyDatabases(): void {
+    let searchedValue = localStorage.getItem('user');
+    let idDatabase: string[] = [];
+    this.selectedDatabase = searchedValue;
+    this.firebaseFirestore.collection('Database', ref => ref.where('members', 'array-contains', searchedValue)).get().subscribe((res: any) => {
+        res.docs.forEach((document: { id: string; }) => {            
+            idDatabase.push(document.id);
+            this.myDBs = idDatabase;      
+        });
+    });    
+  }
+
+  public changeMyDatabase(db: string): void {
+    this.selectedDatabase = db;
+    this.getBills();
+  }
+
   public getUserData() {
     this.firebaseService.getUserData()?.subscribe((data) => {
       this.userName = data.name;
     })
   }
 
-  public saveEarnings(): void {
-    const dateParts = this.monthYear.split('-');
-    const year = dateParts[0];
-    const month = dateParts[1];
-    if (!this.monthEarnings) this.monthEarnings = 0;
-    let _data = {
-      earnings: this.monthEarnings
-    }
-    this.firebaseService.saveMonthEarnings(year, month, _data);
-    this.isEditingEarnings = false;
-  }
-  
-  public getEarnings(): void {
-    const dateParts = this.monthYear.split('-');
-    const year = dateParts[0];
-    const month = dateParts[1];
-    let _sub = this.firebaseService.getMonthEarnings(year, month).subscribe((data) => {        
-      _sub.unsubscribe();
-      this.monthEarnings = data.earnings;  
-    });
-  }
-
   public getBills(): void {
-    this.isLoading = true;
+    this.isLoading = false;
     const dateParts = this.monthYear.split('-');
       const year = dateParts[0];
       const month = dateParts[1];
-      let _sub = this.firebaseService.getBills(year, month).pipe(map((actions) =>
+      let userUid = localStorage.getItem('user');
+      let _sub = this.firebaseService.getBills(year, month, this.selectedDatabase).pipe(map((actions) =>
           actions.map((a: any) => {
             const data = a.payload.doc.data() as any;
             const id = a.payload.doc.id;
@@ -128,16 +142,17 @@ export class HomeComponent implements OnInit {
           })
         )
       ).subscribe((data) => {
-        this.isLoading = false;
-        setTimeout(() => {          
-          this.checkPaidBills();
-        }, 100);
-        _sub.unsubscribe();
-        //this.getEarnings();
-        this.bills = data;
-        this.allBills = data;
-        this.filterOptions = 0;
-        this.filterName = 'Todas';
+        this.isLoading = false;        
+        if (data) {
+          setTimeout(() => {        
+            this.checkPaidBills();
+          }, 100);
+          _sub.unsubscribe();
+          this.bills = data;
+          this.allBills = data;
+          this.filterOptions = 0;
+          this.filterName = 'Todas';
+        }
       })
   }
 
@@ -192,7 +207,7 @@ export class HomeComponent implements OnInit {
     this.paidBills = this.bills.filter((element) => element.isPaid === true);
   }
 
-  public valueCalc(operation: 'paid' | 'unpaid'): number {
+  public valueCalc(operation: 'paid' | 'unpaid'): string {
     if (this.selectedDate !== '') {
       let _total = 0;
       this.allBills.forEach((element) => {
@@ -202,16 +217,35 @@ export class HomeComponent implements OnInit {
           if (!element.isPaid && !element.isEditing) _total += element.billValue;
         }
       });
-      _total.toString().replace('.', ',');
-      return _total;
+      const formatter = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2
+      });
+      return formatter.format(_total);
     }
-    return 0;
+    return 'R$ 0,00';
+  }
+
+  public async checkEmailRegistration(email: string) {
+    await this.firebaseAuth.fetchSignInMethodsForEmail(email).then((res) => {
+      if (res.length > 0) {
+      this.isEmailRegistered = true;
+      this.firebaseService.getInvitedUid(email).subscribe((data) => {
+        this.firebaseService.addMember(data.uid); 
+        this.inviteEmail = '';
+      })}
+      else  this.inviteErrorMessage = 'Email não encontrado.';
+    }, (err) => {
+      if ((err.code) === 'auth/invalid-email')      
+      this.inviteErrorMessage = 'Email inválido.';
+    });      
   }
 
   public stopEditing(): void {
     this.bills.forEach((element) => {
       if (element.isEditing) element.isEditing = false;
-    })
+    });
   }
 
   public removeBill(index: number): void {

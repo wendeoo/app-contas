@@ -15,11 +15,11 @@
         justify-content: flex-start;
         align-items: center;
         width: 100%;
-        color: white;
+        color: #fafafa;
         margin-bottom: 4px;
 
         &.bill-editing {
-            color: black;
+            color: #2e2e2e;
         }
 
         p {            
@@ -40,7 +40,7 @@
     }
 
     &.bill-editing {
-        background-color: white;
+        background-color: #fafafa;
         box-shadow: 0px 4px 0px 0px rgba(#000000, 0.2);
     }
 
@@ -52,13 +52,13 @@
         align-items: center;
 
         .bill-value {
-            color: white;
+            color: #fafafa;
             font-weight: 700;
             font-size: 22px;
             max-width: 200px;
         }
         .value-input {
-            color: black;
+            color: #2e2e2e;
             font-weight: 700;
             font-size: 18px;
             width: 100px;                   
@@ -82,11 +82,11 @@
             align-items: center;
 
             label {
-                color: black;
+                color: #2e2e2e;
                 padding-right: 10px;
             }
             .date-input {
-                color: black;
+                color: #2e2e2e;
                 font-size: 14px;
                 width: 120px;             
             }
@@ -103,10 +103,10 @@
             padding-top: 4px;
             font-size: 18px;
             font-weight: 500;
-            color: white;
+            color: #fafafa;
         }  
         .name-input {
-            color: black;
+            color: #2e2e2e;
             font-size: 16px;
             width: 100%;           
         }              
@@ -125,7 +125,7 @@
             justify-content: center;
 
             label {
-                color: white;
+                color: #fafafa;
                 margin-left: 10px;
                 font-size: 14px;
             }
@@ -136,17 +136,17 @@
                 accent-color: var(--checkbox-paid);       
             }
             #checkbox-paid:checked {
-                background-color: white;
+                background-color: #fafafa;
             }
 
             .paid-notice {
-                color: white;
+                color: #fafafa;
                 margin-left: 12px;
                 font-size: 14px;
             }
 
             .paid-date-input {
-                color: black;
+                color: #2e2e2e;
                 font-size: 14px;
                 margin-left: 10px;           
             }
@@ -173,11 +173,11 @@
             font-weight: 700;  
             
             .bill-edit {   
-                color: white;                   
+                color: #fafafa;                   
                 margin-left: 4px; 
                 
                 &.bill-editing {
-                    color: black;
+                    color: #2e2e2e;
                 }
             }
 
@@ -193,7 +193,7 @@
                     margin-left: 4px; 
                     
                     &.bill-editing :not(.disabled) {
-                        color: black;
+                        color: #2e2e2e;
                     }
 
                     &.disabled {
@@ -215,7 +215,7 @@
                     margin-left: 4px; 
                     
                     &.bill-editing :not(.disabled) {
-                        color: black;
+                        color: #2e2e2e;
                     }
 
                     &.disabled {

@@ -1,15 +1,11 @@
 <div class="container" [ngClass]="theme">
     <div class="content">
         <p *ngIf="loadingData">carregando dados...</p>        
-        <p *ngIf="!loadingData">{{ greetingMessage + userName }}!</p>
+        <p *ngIf="!loadingData" class="username">{{ greetingMessage + userName }}!</p>
         <a *ngIf="!loadingData && !isSettings" (click)="goToSettings()"><mat-icon>settings</mat-icon></a>
         <a *ngIf="!loadingData && isSettings" (click)="goToSettings()"><mat-icon>arrow_back</mat-icon></a>
     </div>
     <div class="today">
         <p *ngIf="!loadingData">Hoje é {{ weekDay + ', ' + day + ' de ' + month + ' de ' + year }}</p>
-
     </div>
-    <!-- <div class="members">
-        <p *ngIf="!loadingData">Membros: {{ userName }}</p>
-    </div> -->
 </div>

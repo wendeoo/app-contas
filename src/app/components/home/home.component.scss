@@ -97,9 +97,6 @@
             font-weight: 600;
             margin-left: 8px;                
             }
-
-            mat-icon {
-            }
         }
 
         .no-bills {
@@ -111,7 +108,7 @@
             padding-top: 40px;
             font-weight: 600;
             gap: 20px;
-            color: var(--font);
+            color: var(--darkest);
 
             mat-icon {
                 width: 40px;
@@ -159,7 +156,7 @@
             p {
                 font-size: 18px;
                 font-weight: 600; 
-                color: white;               
+                color: #fafafa;               
             }
 
             input {
@@ -207,7 +204,7 @@
             color: var(--font-options-box);
             width: 70vw;
             height: 300px;
-            padding: 20px 20px 20px 70px;  
+            padding: 20px;  
             border-radius: 8px;
 
             .options-name {   
@@ -251,16 +248,64 @@
                 }
 
                 .selector {
+                    display: flex;
                     margin-left: 10px;
                     width: 100%;
                     width: 100px;
-                    padding: 4px;
+                    padding: 4px 4px 4px 6px;
                     border: 1px solid gray;
                     border-radius: 5px;
                     font-size: 14px;
-                    background-color: white;                    
+                    background-color: #fafafa; 
+                    
+                    &::after {
+                        color: var(--darkest);
+                        content: "▼";
+                        padding-right: 6px;
+                    }
                 }               
-            }           
+            } 
+            
+            .invitation-area {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                height: auto; 
+                margin-top: 10px;
+                color: var(--font-options-box);
+
+                p {
+                    font-weight: 600;
+                }
+
+                input {
+                    font-size: 14px;
+                    margin-left: 10px;
+                    width: 150px;
+                    outline: #d3d3d3 solid 1px;
+                }
+
+                mat-icon {
+                    margin-left: 10px;
+                }
+            }
+
+            .change-database {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                height: auto; 
+                margin-top: 10px;
+                color: var(--font-options-box);
+
+                select {
+                    color: var(--font-options-box);
+                    
+                    option {
+                        color: black;
+                    }
+                }
+            }
         }
 
         a {
@@ -275,7 +320,7 @@
             color: var(--error-red);
 
             mat-icon {
-                margin-left: 10px;
+                margin-left: 15px;
             }
         }
     }
@@ -290,11 +335,12 @@
     }
 
     .loader {
-        width: 300px;
-        height: 300px;
-        margin: 0 auto;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        margin: 0 auto;
+        padding-top: 100px;
     }
 }

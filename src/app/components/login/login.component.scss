@@ -52,7 +52,7 @@
             .register-title,
             .reset-title {
                 font-size: 22px;
-                color: white;
+                color: #fafafa;
                 text-align: center;
                 padding-bottom: 30px;
                 font-weight: 700;
@@ -72,7 +72,7 @@
                 .btn-enter {
                     background-color: var(--button);
                     cursor: pointer;
-                    color: black;
+                    color: #2e2e2e;
                     padding: 10px;
                     font-weight: 700;
                     border-width: 0;
@@ -98,7 +98,7 @@
                 align-items: center;
                 justify-content: center;
                 width: 100%;
-                color: white;
+                color: #fafafa;
                 margin-top: 30px;
 
                 .forgot-password-link {
@@ -131,7 +131,7 @@
                 .btn-register {
                     background-color: var(--button);
                     cursor: pointer;
-                    color: black;
+                    color: #2e2e2e;
                     padding: 10px;
                     font-weight: 700;
                     border-width: 0;
@@ -159,7 +159,7 @@
                 justify-content: center;   
                 font-size: 14px;
                 text-align: center;
-                color: white;
+                color: #fafafa;
                 margin-top: 30px;
 
                 &:hover {
@@ -170,7 +170,7 @@
             .btn-send {
                 background-color: var(--button);
                 cursor: pointer;
-                color: black;
+                color: #2e2e2e;
                 padding: 10px;
                 font-weight: 700;
                 border-width: 0;
@@ -202,7 +202,7 @@
                 font-size: 14px;
                 font-weight: 500;
                 text-align: center;
-                color: white;
+                color: #fafafa;
                 margin-top: 450px;
                 padding: 8px;
             }

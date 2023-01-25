@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth'
 import { AngularFirestore } from '@angular/fire/compat/firestore'
 import { Observable } from 'rxjs';
+import { arrayRemove, arrayUnion } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -67,6 +68,9 @@ export class FirebaseService {
         name
       });
       localStorage.setItem('user', res?.user?.uid!);
+      this.saveUserInfo(email);      
+      this.createDatabase(res?.user?.uid!);
+      this.addMember(res?.user?.uid!);
       return res?.user?.uid;
     }, (err) => {
       switch (err.code) {
@@ -83,6 +87,30 @@ export class FirebaseService {
     })
   }
 
+  public async saveUserInfo(email: string) {
+    let userUid = localStorage.getItem('user');
+    await this.firebaseFirestore.collection('UserInfo').doc(email).set({
+      uid: userUid
+    });
+  }
+
+  public createDatabase(uid: string) {
+    this.firebaseFirestore.collection('Database').doc(uid).collection('Years').doc('2023').collection('Months').doc('01')
+    .collection('Bills').doc('default').set({default: 'default'});
+    this.firebaseFirestore.collection('Database').doc(uid).set({members: [uid]});
+  }
+
+  public addMember(uid: string) {
+    let myUid = localStorage.getItem('user');
+    this.firebaseFirestore.collection('Database').doc(myUid!).update({
+      members: arrayUnion(uid)
+    })
+  }
+
+  public getInvitedUid(email: string): Observable<any> {
+    return this.firebaseFirestore.collection('UserInfo').doc(email).valueChanges();
+  }  
+
   public logout(): void {
     localStorage.removeItem('user');
     this.firebaseAuth.signOut();    
@@ -93,13 +121,6 @@ export class FirebaseService {
     if (!userUid) return;    
     return this.firebaseFirestore.collection('Users').doc(userUid).valueChanges();
   }
-  
-  public saveMonthEarnings(year: string, month: string, value: any): void { 
-    let userUid = localStorage.getItem('user');
-    if (!userUid) return;
-    this.firebaseFirestore.collection('Users').doc(userUid).collection('Years').doc(year)
-    .collection('Months').doc(month).collection('Earnings').doc('Earnings').set(value);
-  }
 
   public updateName(newName: string): void {
     let userUid = localStorage.getItem('user');
@@ -107,29 +128,28 @@ export class FirebaseService {
     this.firebaseFirestore.collection('Users').doc(userUid).update({name: newName});
   }
 
-  public getMonthEarnings(year: string, month: string): Observable<any> { 
-    let userUid = localStorage.getItem('user');
-    return this.firebaseFirestore.collection('Users').doc(userUid!).collection('Years').doc(year)
-    .collection('Months').doc(month).collection('Earnings').doc('Earnings').valueChanges();
-  }
+  // public getBills(year: string, month: string): Observable<any> {
+  //   let userUid = localStorage.getItem('user');   
+  //   return this.firebaseFirestore.collection('Database', (ref) => ref.where(userUid!, 'array-contains', 'members')).doc(userUid!).collection('Years').doc(year)
+  //   .collection('Months').doc(month).collection('Bills', (ref) => ref.orderBy('createdAt', 'desc')).snapshotChanges();
+  // }
 
-  public getBills(year: string, month: string): Observable<any> {
-    let userUid = localStorage.getItem('user');
-    return this.firebaseFirestore.collection('Users').doc(userUid!).collection('Years').doc(year)
+  public getBills(year: string, month: string, docId: string): Observable<any> {
+    return this.firebaseFirestore.collection('Database').doc(docId).collection('Years').doc(year)
     .collection('Months').doc(month).collection('Bills', (ref) => ref.orderBy('createdAt', 'desc')).snapshotChanges();
   }
 
   public updateBill(year: string, month: string, billId: string, billData: any): void {
     let userUid = localStorage.getItem('user');
     if (!userUid) return;
-    this.firebaseFirestore.collection('Users').doc(userUid).collection('Years').doc(year)
+    this.firebaseFirestore.collection('Database').doc(userUid).collection('Years').doc(year)
     .collection('Months').doc(month).collection('Bills').doc(billId).update(billData);
   }
 
   public deleteBill(year: string, month: string, billId: string): void {
     let userUid = localStorage.getItem('user');
     if (!userUid) return;
-    this.firebaseFirestore.collection('Users').doc(userUid).collection('Years').doc(year)
+    this.firebaseFirestore.collection('Database').doc(userUid).collection('Years').doc(year)
     .collection('Months').doc(month).collection('Bills').doc(billId).delete();
   }
 

@@ -1,6 +1,6 @@
 <div class="bill-card" [class.bill-paid]="billData.isPaid" [class.bill-editing]="billData.isEditing">
     <div class="bill-header">
-        <div *ngIf="!billData.isEditing" class="bill-value">R{{ billData.billValue | currency }}</div>
+        <div *ngIf="!billData.isEditing" class="bill-value">{{ formattedBillValue }}</div>
         <input *ngIf="billData.isEditing" type="number" class="value-input" [(ngModel)]="billData.billValue" placeholder="R$ 0,00">
         <div *ngIf="!billData.isEditing"
             class="bill-date"
