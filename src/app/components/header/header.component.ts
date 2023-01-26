@@ -14,11 +14,11 @@ export class HeaderComponent implements OnInit {
   @Input() public month: string = '';
   @Input() public year: number = 0;
   @Input() public theme: any;
+  @Input() public isSettings: boolean = false;
   @Output() public settingsEmitter: EventEmitter<any> = new EventEmitter();
 
   public userName: string = '';
   public loadingData: boolean = false;
-  public isSettings: boolean = false;
 
   constructor(
     public firebaseService: FirebaseService,

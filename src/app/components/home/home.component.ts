@@ -47,6 +47,10 @@ export class HomeComponent implements OnInit {
   public inviteErrorMessage: string = '';
   public myDBs: string[] = [];
   public selectedDatabase: any;
+  public dbOwner: any;
+  public dbOwnerDisplay: any[] = [];
+  public userEmail: any;
+  public savedDb: any;
 
   constructor(
     private firebaseService: FirebaseService,
@@ -59,11 +63,9 @@ export class HomeComponent implements OnInit {
 
     let _theme = localStorage.getItem('selectedTheme');
     if (_theme) this.theme = _theme;
-    else this.theme = 'default';
-       
-    this.init();
-    this.getBills(); 
-    this.getUserData();
+    else this.theme = 'default';    
+    
+    this.init();      
   }
 
   public editMonth(): void {    
@@ -101,59 +103,82 @@ export class HomeComponent implements OnInit {
     const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
     this.month = monthNames[this.date.getMonth()]; 
-  
-    this.getMyDatabases();
+
+    this.userEmail = localStorage.getItem('email');
+
+    this.isLoading = true;
+
+    this.getUserData();        
   }
 
   public getMyDatabases(): void {
-    let searchedValue = localStorage.getItem('user');
     let idDatabase: string[] = [];
-    this.selectedDatabase = searchedValue;
-    this.firebaseFirestore.collection('Database', ref => ref.where('members', 'array-contains', searchedValue)).get().subscribe((res: any) => {
-        res.docs.forEach((document: { id: string; }) => {            
+    let defaultDb = localStorage.getItem('user');
+    this.firebaseFirestore.collection('Database', ref => ref.where('members', 'array-contains', defaultDb))
+      .get().subscribe((res: any) => {
+        res.docs.forEach((document: { id: string; }) => {                  
             idDatabase.push(document.id);
-            this.myDBs = idDatabase;      
+            this.myDBs = idDatabase;                        
+            this.getDatabaseOwner();           
         });
-    });    
+      });    
   }
 
-  public changeMyDatabase(db: string): void {
+  public changeMyDatabase(db: any): void {
     this.selectedDatabase = db;
+    this.getDatabaseOwner();
     this.getBills();
   }
 
   public getUserData() {
     this.firebaseService.getUserData()?.subscribe((data) => {
       this.userName = data.name;
-    })
+      this.getUserInfo(); 
+    });
   }
 
-  public getBills(): void {
-    this.isLoading = false;
+  public getUserInfo() {
+    this.firebaseService.getUserInfo(this.userEmail)?.subscribe((data) => {
+      this.selectedDatabase = data.savedDb;
+      this.getMyDatabases();         
+    });
+  }
+
+  public saveUserInfo() {
+    this.firebaseService.saveUserInfo(this.userEmail, this.selectedDatabase);
+    this.isSettings = false;
+  }
+
+  public getDatabaseOwner(): void {  
+      this.firebaseService.getCurrentDatabaseOwner(this.selectedDatabase)?.subscribe((data) => {     
+        this.dbOwner = data.owner;
+        this.getBills(); 
+      });    
+  }
+
+  public getBills(): void {    
     const dateParts = this.monthYear.split('-');
       const year = dateParts[0];
-      const month = dateParts[1];
-      let userUid = localStorage.getItem('user');
+      const month = dateParts[1]; 
       let _sub = this.firebaseService.getBills(year, month, this.selectedDatabase).pipe(map((actions) =>
           actions.map((a: any) => {
             const data = a.payload.doc.data() as any;
             const id = a.payload.doc.id;
             return { id, ...data };
           })
-        )
-      ).subscribe((data) => {
-        this.isLoading = false;        
-        if (data) {
-          setTimeout(() => {        
-            this.checkPaidBills();
-          }, 100);
-          _sub.unsubscribe();
-          this.bills = data;
-          this.allBills = data;
-          this.filterOptions = 0;
-          this.filterName = 'Todas';
-        }
-      })
+        )).subscribe((data) => {
+          this.isLoading = false;        
+          if (data) {
+            setTimeout(() => {        
+              this.checkPaidBills();
+            }, 100);
+            _sub.unsubscribe();
+            this.bills = data;
+            this.allBills = data;
+            this.filterOptions = 0;
+            this.filterName = 'Todas';
+          }
+        })
   }
 
   public formatDate(date: string): string {
@@ -234,6 +259,7 @@ export class HomeComponent implements OnInit {
       this.firebaseService.getInvitedUid(email).subscribe((data) => {
         this.firebaseService.addMember(data.uid); 
         this.inviteEmail = '';
+        this.isSettings = false;
       })}
       else  this.inviteErrorMessage = 'Email não encontrado.';
     }, (err) => {

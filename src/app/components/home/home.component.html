@@ -1,6 +1,12 @@
 <div class="container" [ngClass]="theme">
-    <app-header [theme]="theme" [weekDay]="weekDay" [day]="day" [month]="month" [year]="year"
-    (settingsEmitter)="goToSettings()"></app-header>
+    <app-header
+    [theme]="theme" [weekDay]="weekDay" [day]="day" [month]="month" [year]="year"
+    [isSettings]="isSettings"
+    (settingsEmitter)="goToSettings()"
+    ></app-header>
+    <div class="members" *ngIf="!isLoading">
+        Conta selecionada: {{ dbOwner }}
+    </div>
     <div class="content" *ngIf="!isLoading && !isSettings">
         <div class="content-header">
             <div *ngIf="selectedDate === ''" class="selected-month"></div>
@@ -35,6 +41,7 @@
                 [billData]="bill"
                 [today]="today"
                 [selectedPeriod]="monthYear"
+                [selectedDb]="selectedDatabase"
                 (billPaidEmitter)="checkPaidBills()"
                 (deleteEmitter)="removeBill(i)">
             </app-bill-card>
@@ -44,37 +51,63 @@
         <div class="options-title">Opções</div>
         <div class="options-box">
             <div class="options-name">
-                <p class="name-change" *ngIf="!isEditingName">Alterar Nome:</p>
-                <p class="name-change" *ngIf="isEditingName">Novo Nome:</p>
-                <p class="current-name" *ngIf="!isEditingName">{{ userName }}</p>
-                <input class="input-edit-name" type="text" *ngIf="isEditingName" [(ngModel)]="newName" maxlength="15" placeholder="{{userName}}">
-                <mat-icon class="icon-edit" *ngIf="!isEditingName" (click)="isEditingName = true">edit</mat-icon>
-                <mat-icon class="icon-edit" *ngIf="isEditingName" (click)="saveName()">save</mat-icon>
+                <div class="name-area">
+                    <p class="name-change" *ngIf="!isEditingName">Alterar Nome:</p>
+                    <p class="name-change" *ngIf="isEditingName">Novo Nome:</p>
+                    <p class="current-name" *ngIf="!isEditingName">{{ userName }}</p>
+                    <input class="input-edit-name" type="text" *ngIf="isEditingName" [(ngModel)]="newName" maxlength="15" placeholder="{{userName}}">
+                    <mat-icon class="icon-edit" *ngIf="!isEditingName" (click)="isEditingName = true">edit</mat-icon>
+                    <mat-icon class="icon-edit" *ngIf="isEditingName" (click)="saveName()">save</mat-icon>
+                </div>
+                <div class="name-help">
+                    Altere o nome de exibição. Também altera o nome da conta.
+                </div>
             </div>          
             <div class="theme-selector">
-                <p>Tema:</p>
-                <div class="selector">
-                    <select #themeSelector (change)="getValue(themeSelector.value)" [(ngModel)]="this.theme">
-                        <option value="default" >Padrão</option>
-                        <option value="warm"    >Quente</option>
-                        <option value="ice"     >Frio</option>
-                        <option value="money"   >Dinheiro</option>
-                        <option value="cute"    >Doce</option>
-                        <option value="grass"   >Natureza</option>
-                        <option value="business">Negócios</option>
-                    </select>
+                <div class="theme-area">
+                    <p>Tema:</p>
+                    <div class="selector">
+                        <select #themeSelector (change)="getValue(themeSelector.value)" [(ngModel)]="this.theme">
+                            <option value="default" >Padrão</option>
+                            <option value="warm"    >Quente</option>
+                            <option value="ice"     >Frio</option>
+                            <option value="money"   >Dinheiro</option>
+                            <option value="cute"    >Doce</option>
+                            <option value="grass"   >Natureza</option>
+                            <option value="business">Negócios</option>
+                            <option value="chocolate">Chocolate</option>
+                            <option value="violet"  >Violeta</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="theme-help">
+                    Altera o esquema de cores.
                 </div>
             </div>
-            <div class="invitation-area">
-                <p>Convidar:</p>
-                <input class="input-invite-email" type="text" [(ngModel)]="inviteEmail" placeholder="email do convidado">
-                <mat-icon (click)="checkEmailRegistration(inviteEmail)">send</mat-icon>                
+            <div class="invitation">
+                <div class="invitation-area">
+                    <p>Convidar:</p>
+                    <input class="input-invite-email" type="text" [(ngModel)]="inviteEmail" placeholder="email do convidado">
+                    <mat-icon (click)="checkEmailRegistration(inviteEmail)">send</mat-icon>
+                </div>
+                <div class="invitation-help">
+                    Insira o email de um usuário já cadastrado para compartilhar sua conta.
+                </div>               
             </div>
             <div class="change-database">
-                <select #changeDatabase (change)="changeMyDatabase(changeDatabase.value)">
-                    <option selected disabled>Escolha o Banco de Dados</option>
-                    <option value="{{myDBs[i]}}" *ngFor="let db of myDBs; let i = index">{{ myDBs[i] }}</option>
-                </select>
+                <div class="change-area">
+                    <p>Conta:</p>
+                    <div class="change-selector">
+                        <select #changeDatabase (change)="changeMyDatabase(changeDatabase.value)" [(ngModel)]="selectedDatabase">
+                            <option selected disabled>Escolha a Conta</option>
+                            <option value="{{myDBs[i]}}" *ngFor="let db of myDBs; let i = index">Conta {{i+1}}</option>
+                        </select>
+                    </div>
+                    <mat-icon (click)="saveUserInfo()">save</mat-icon>
+                </div>
+                <div class="change-help">
+                    Alterne entre as contas que você tem acesso.
+                </div>
             </div>
         </div>
         <div class="exit-app">

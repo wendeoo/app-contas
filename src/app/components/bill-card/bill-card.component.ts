@@ -13,6 +13,7 @@ export class BillCardComponent implements OnInit {
 
   @Input() public today: any;
   @Input() public selectedPeriod: any;
+  @Input() public selectedDb: any;
   @Output() public deleteEmitter: EventEmitter<any> = new EventEmitter();
   @Output() public billPaidEmitter: EventEmitter<any> = new EventEmitter();
 
@@ -55,7 +56,7 @@ export class BillCardComponent implements OnInit {
     const dateParts = this.selectedPeriod.split('-');
     const year = dateParts[0];
     const month = dateParts[1];
-    this.firebaseService.updateBill(year, month, this.billData.id, this.billData);
+    this.updateBill(year, month, this.billData.id, this.billData);
   }
 
   public billEdit(): void {
@@ -76,7 +77,7 @@ export class BillCardComponent implements OnInit {
       const month = dateParts[1];
       
       if (this.billData.isSaved && this.billData.id) {
-        this.firebaseService.updateBill(year, month, billId, this.billData);
+        this.updateBill(year, month, billId, this.billData);
         this.compareDates();
       } else {
         this.billData.isSaved = true;
@@ -84,13 +85,18 @@ export class BillCardComponent implements OnInit {
        
         let userUid = localStorage.getItem('user');
         if (!userUid) return;
-        await this.firebaseFirestore.collection('Database').doc(userUid).collection('Years').doc(year)
+        await this.firebaseFirestore.collection('Database').doc(this.selectedDb).collection('Years').doc(year)
         .collection('Months').doc(month).collection('Bills').add(this.billData).then(async data => {
           this.billData.id = data.id;  
         });                
         this.compareDates();
       }
     }    
+  }
+
+  public updateBill(year: string, month: string, billId: string, billData: any): void {
+    this.firebaseFirestore.collection('Database').doc(this.selectedDb).collection('Years').doc(year)
+    .collection('Months').doc(month).collection('Bills').doc(billId).update(billData);
   }
 
   public compareDates(): void {
@@ -119,6 +125,6 @@ export class BillCardComponent implements OnInit {
     const dateParts = this.selectedPeriod.split('-');
     const year = dateParts[0];
     const month = dateParts[1];
-    this.firebaseService.deleteBill(year, month, this.billData.id);    
+    this.firebaseService.deleteBill(year, month, this.billData.id, this.selectedDb);    
   }
 }

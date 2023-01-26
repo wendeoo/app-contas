@@ -1,9 +1,10 @@
 <div class="container" [ngClass]="theme">
     <div class="main">
         <app-loader *ngIf="isLoading"></app-loader>
-        <!-- <div class="app-logo">
-            <img src="assets/billHive.png">
-        </div> -->
+        <div class="app-name">
+            <p class="name">BILL $HARE</p>
+            <p class="sub">Gerencie e compartilhe pagamentos de contas</p>
+        </div>
         <div *ngIf="isLoginScreen && !isResettingPassword && !isLoading" class="login-box">
             <div class="login-title">ENTRAR</div>
             <form class="login-form" [formGroup]="formLogin">
