@@ -22,6 +22,7 @@
             <label *ngIf="!billData.isEditing && !billData.isPaid">Tá pago!</label>
             <p class="paid-notice" *ngIf="!billData.isEditing && billData.isPaid"
             >Pago em {{ billData.billPaidDate }}</p>
+            <p class="paid-by" *ngIf="billData.isPaid">por {{ billData.paidBy }}</p>
             <div *ngIf="!billData.isEditing && billData.isExpired && !billData.isPaid" class="expired-notice">
                 <mat-icon>access_time</mat-icon>
                 <p>atraso</p>

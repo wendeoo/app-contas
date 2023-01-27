@@ -4,8 +4,9 @@
     [isSettings]="isSettings"
     (settingsEmitter)="goToSettings()"
     ></app-header>
-    <div class="members" *ngIf="!isLoading">
-        Conta selecionada: {{ dbOwner }}
+    <div class="members">
+        <p *ngIf="!isLoading">Conta selecionada: {{ dbOwner }}</p>
+        <p *ngIf="isLoading">...</p>
     </div>
     <div class="content" *ngIf="!isLoading && !isSettings">
         <div class="content-header">
@@ -42,6 +43,7 @@
                 [today]="today"
                 [selectedPeriod]="monthYear"
                 [selectedDb]="selectedDatabase"
+                [paidBy]="userName"
                 (billPaidEmitter)="checkPaidBills()"
                 (deleteEmitter)="removeBill(i)">
             </app-bill-card>
@@ -75,7 +77,7 @@
                             <option value="cute"    >Doce</option>
                             <option value="grass"   >Natureza</option>
                             <option value="business">Negócios</option>
-                            <option value="chocolate">Chocolate</option>
+                            <option value="cafe"    >Café</option>
                             <option value="violet"  >Violeta</option>
                         </select>
                     </div>
@@ -87,12 +89,18 @@
             <div class="invitation">
                 <div class="invitation-area">
                     <p>Convidar:</p>
-                    <input class="input-invite-email" type="text" [(ngModel)]="inviteEmail" placeholder="email do convidado">
+                    <input class="input-invite-email" type="text" (click)="clearInviteInput()" [(ngModel)]="inviteEmail" placeholder="email do convidado">
                     <mat-icon (click)="checkEmailRegistration(inviteEmail)">send</mat-icon>
                 </div>
-                <div class="invitation-help">
+                <div class="invitation-help" *ngIf="!invitationError && !invitationSuccess">
                     Insira o email de um usuário já cadastrado para compartilhar sua conta.
-                </div>               
+                </div>
+                <div class="invitation-error" *ngIf="invitationError && !invitationSuccess">
+                    {{ inviteErrorMessage }}
+                </div>  
+                <div class="invitation-success" *ngIf="!invitationError && invitationSuccess">
+                    Usuário convidado com sucesso. Agora ele(a) poderá acessar o seu banco de dados.
+                </div>                
             </div>
             <div class="change-database">
                 <div class="change-area">
@@ -100,9 +108,12 @@
                     <div class="change-selector">
                         <select #changeDatabase (change)="changeMyDatabase(changeDatabase.value)" [(ngModel)]="selectedDatabase">
                             <option selected disabled>Escolha a Conta</option>
-                            <option value="{{myDBs[i]}}" *ngFor="let db of myDBs; let i = index">Conta {{i+1}}</option>
+                            <option value="{{myDBs[i]}}" *ngFor="let db of myDBs; let i = index">
+                                <p>Conta {{i+1}}</p>
+                              </option>
                         </select>
                     </div>
+                    <p class="current-owner">{{'⯈ ' + dbOwner}}</p>
                     <mat-icon (click)="saveUserInfo()">save</mat-icon>
                 </div>
                 <div class="change-help">

@@ -51,6 +51,8 @@ export class HomeComponent implements OnInit {
   public dbOwnerDisplay: any[] = [];
   public userEmail: any;
   public savedDb: any;
+  public invitationError: boolean = false;
+  public invitationSuccess: boolean = false;
 
   constructor(
     private firebaseService: FirebaseService,
@@ -115,10 +117,10 @@ export class HomeComponent implements OnInit {
     let idDatabase: string[] = [];
     let defaultDb = localStorage.getItem('user');
     this.firebaseFirestore.collection('Database', ref => ref.where('members', 'array-contains', defaultDb))
-      .get().subscribe((res: any) => {
-        res.docs.forEach((document: { id: string; }) => {                  
-            idDatabase.push(document.id);
-            this.myDBs = idDatabase;                        
+      .get().subscribe((res: any) => { 
+        res.docs.forEach((document: { id: string; owner: string }) => {                  
+            idDatabase.unshift(document.id);            
+            this.myDBs = idDatabase;
             this.getDatabaseOwner();           
         });
       });    
@@ -259,13 +261,23 @@ export class HomeComponent implements OnInit {
       this.firebaseService.getInvitedUid(email).subscribe((data) => {
         this.firebaseService.addMember(data.uid); 
         this.inviteEmail = '';
-        this.isSettings = false;
-      })}
-      else  this.inviteErrorMessage = 'Email não encontrado.';
-    }, (err) => {
-      if ((err.code) === 'auth/invalid-email')      
-      this.inviteErrorMessage = 'Email inválido.';
+        this.invitationSuccess = true;
+      })
+      } else {
+        this.invitationError = true;
+        this.inviteErrorMessage = 'Email não encontrado. Certifique-se que o email inserido pertence a um usuário cadastrado.';       
+      }          
+    }, (err) => {     
+      if ((err.code) === 'auth/invalid-email') { 
+        this.invitationError = true;    
+        this.inviteErrorMessage = 'Email inválido. Verifique se o email inserido está correto. Ex: email@mail.com';
+      }
     });      
+  }
+
+  public clearInviteInput(): void {
+    this.invitationError = false;
+    this.invitationSuccess = false;
   }
 
   public stopEditing(): void {
@@ -280,6 +292,7 @@ export class HomeComponent implements OnInit {
 
   public goToSettings(): void {
     this.isSettings = !this.isSettings;
+    if (this.invitationSuccess) this.invitationSuccess = false;
   }
 
   public saveName(): void {

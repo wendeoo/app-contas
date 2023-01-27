@@ -8,5 +8,6 @@ export interface BillData {
     isSaved: boolean,
     isExpired: boolean,
     createdAt: number,
-    id: string
+    id: string,
+    paidBy: string
 }

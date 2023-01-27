@@ -16,7 +16,7 @@
         color: var(--font-expenses);
         font-size: 14px;
         font-weight: 600;
-        padding: 4px 4px 6px 4px;
+        padding: 4px 0 6px 0;
     }
 
     .content {
@@ -242,7 +242,8 @@
                         outline: #d3d3d3 solid 1px;
                     }
 
-                    .icon-edit {
+                    mat-icon {
+                        color: var(--darkest);
                         margin-left: 10px;
                     } 
                 }
@@ -352,6 +353,29 @@
                     font-size: 13px;
                     color: var(--font-options-box);
                 }
+
+                .invitation-error {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    margin-top: 2px; 
+                    width: 300px;
+                    height: auto;                   
+                    font-size: 13px;
+                    color: var(--error-red);
+                }
+
+                .invitation-success {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    margin-top: 2px; 
+                    width: 300px;
+                    height: auto;                   
+                    font-size: 13px;
+                    background-color: var(--darkest);
+                    color: var(--font-header);
+                }
             }
 
             .change-database {
@@ -377,7 +401,7 @@
                         display: flex;
                         margin-left: 10px;
                         width: 100%;
-                        width: 100px;
+                        width: 80px;
                         padding: 4px 4px 4px 6px;
                         border: 1px solid gray;
                         border-radius: 5px;
@@ -397,7 +421,7 @@
 
                     mat-icon {
                         color: var(--darkest);
-                        margin-left: 10px;
+                        margin-left: 8px;
                     }
                 }
 
@@ -410,6 +434,13 @@
                     height: auto;                   
                     font-size: 13px;
                     color: var(--font-options-box);
+                }
+
+                .current-owner {
+                    color: var(--font-options-box);
+                    font-weight: 500;
+                    font-size: 14px;
+                    margin-left: 6px;
                 }
             }
         }

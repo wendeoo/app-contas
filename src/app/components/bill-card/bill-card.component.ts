@@ -14,6 +14,7 @@ export class BillCardComponent implements OnInit {
   @Input() public today: any;
   @Input() public selectedPeriod: any;
   @Input() public selectedDb: any;
+  @Input() public paidBy: string = '';
   @Output() public deleteEmitter: EventEmitter<any> = new EventEmitter();
   @Output() public billPaidEmitter: EventEmitter<any> = new EventEmitter();
 
@@ -33,7 +34,8 @@ export class BillCardComponent implements OnInit {
     isSaved: false,
     isExpired: false,
     createdAt: 0,
-    id: ''
+    id: '',
+    paidBy: ''
   }
 
   ngOnInit(): void {
@@ -52,6 +54,7 @@ export class BillCardComponent implements OnInit {
 
   public billPaid(): void {
     this.billData.isPaid = !this.billData.isPaid;
+    this.billData.paidBy = this.paidBy;
     this.billPaidEmitter.emit();
     const dateParts = this.selectedPeriod.split('-');
     const year = dateParts[0];
