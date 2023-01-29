@@ -111,9 +111,9 @@ export class FirebaseService {
   }
 
   public getInvitedUid(email: string): Observable<any> {
-    return this.firebaseFirestore.collection('UserInfo').doc(email).valueChanges();
-  }  
-
+     return this.firebaseFirestore.collection('UserInfo').doc(email).valueChanges();
+  }
+  
   public logout(): void {
     localStorage.removeItem('user');
     localStorage.removeItem('email');

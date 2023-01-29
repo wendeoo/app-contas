@@ -54,7 +54,8 @@ export class BillCardComponent implements OnInit {
 
   public billPaid(): void {
     this.billData.isPaid = !this.billData.isPaid;
-    this.billData.paidBy = this.paidBy;
+    if (this.billData.isPaid) this.billData.paidBy = this.paidBy;
+    else this.billData.paidBy = '';
     this.billPaidEmitter.emit();
     const dateParts = this.selectedPeriod.split('-');
     const year = dateParts[0];

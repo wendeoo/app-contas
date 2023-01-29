@@ -57,7 +57,7 @@
                     <p class="name-change" *ngIf="!isEditingName">Alterar Nome:</p>
                     <p class="name-change" *ngIf="isEditingName">Novo Nome:</p>
                     <p class="current-name" *ngIf="!isEditingName">{{ userName }}</p>
-                    <input class="input-edit-name" type="text" *ngIf="isEditingName" [(ngModel)]="newName" maxlength="15" placeholder="{{userName}}">
+                    <input class="input-edit-name" type="text" *ngIf="isEditingName" [(ngModel)]="newName" minlength="3" maxlength="15" placeholder="{{userName}}">
                     <mat-icon class="icon-edit" *ngIf="!isEditingName" (click)="isEditingName = true">edit</mat-icon>
                     <mat-icon class="icon-edit" *ngIf="isEditingName" (click)="saveName()">save</mat-icon>
                 </div>
@@ -89,7 +89,7 @@
             <div class="invitation">
                 <div class="invitation-area">
                     <p>Convidar:</p>
-                    <input class="input-invite-email" type="text" (click)="clearInviteInput()" [(ngModel)]="inviteEmail" placeholder="email do convidado">
+                    <input class="input-invite-email" type="text" (click)="clearInviteInput()" [(ngModel)]="inviteEmail" placeholder="email@mail.com">
                     <mat-icon (click)="checkEmailRegistration(inviteEmail)">send</mat-icon>
                 </div>
                 <div class="invitation-help" *ngIf="!invitationError && !invitationSuccess">
@@ -113,7 +113,7 @@
                               </option>
                         </select>
                     </div>
-                    <p class="current-owner">{{'⯈ ' + dbOwner}}</p>
+                    <p class="current-owner">{{': ' + dbOwner}}</p>
                     <mat-icon (click)="saveUserInfo()">save</mat-icon>
                 </div>
                 <div class="change-help">
@@ -124,7 +124,7 @@
         <div class="exit-app">
             <a (click)="logout()">Sair da Conta<mat-icon>exit_to_app</mat-icon></a>
         </div>
-    </div> 
+    </div>
     <div class="loader" *ngIf="isLoading"><app-loader></app-loader>   
-</div>
+    </div>
 <app-footer [theme]="theme" *ngIf="!isLoading"></app-footer>

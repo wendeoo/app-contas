@@ -3,9 +3,8 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { FirebaseService } from 'src/app/services/firebase.service';
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { map } from 'rxjs';
-import { DocumentSnapshot, QuerySnapshot } from 'firebase/firestore';
 
 @Component({
   selector: 'app-home',
@@ -269,8 +268,8 @@ export class HomeComponent implements OnInit {
       }          
     }, (err) => {     
       if ((err.code) === 'auth/invalid-email') { 
-        this.invitationError = true;    
-        this.inviteErrorMessage = 'Email inválido. Verifique se o email inserido está correto. Ex: email@mail.com';
+        this.invitationError = true;   
+        this.inviteErrorMessage = 'Email inválido. Verifique se o email inserido está correto.';
       }
     });      
   }
@@ -297,7 +296,7 @@ export class HomeComponent implements OnInit {
 
   public saveName(): void {
     this.isEditingName = false;
-    if (this.newName) this.firebaseService.updateName(this.newName);
+    if (this.newName.length >= 3) this.firebaseService.updateName(this.newName);
   }
 
   public getValue(val: string): void {
