@@ -52,7 +52,7 @@ export class BillCardComponent implements OnInit {
     return formatter.format(this.billData.billValue);
   }
 
-  public billPaid(): void {
+  public billPaid(): void {  
     this.billData.isPaid = !this.billData.isPaid;
     if (this.billData.isPaid) this.billData.paidBy = this.paidBy;
     else this.billData.paidBy = '';
@@ -108,20 +108,27 @@ export class BillCardComponent implements OnInit {
     var _billDateParts = _billDate.split("/");
     _billDate = _billDateParts[1] + "/" + _billDateParts[0] + "/" + _billDateParts[2];
     var _billDateTime = new Date(_billDate);
+    let _now = new Date().getTime();
 
     var _billDatePaid = this.billData.billPaidDate;
     var _billDatePaidParts = _billDatePaid.split("/");
-    _billDatePaid = _billDatePaidParts[1] + "/" + _billDatePaidParts[0] + "/" + _billDatePaidParts[2];
-    var _billDatePaidTime = new Date(_billDatePaid);
-    
-    if (_billDatePaidTime.getTime() >  _billDateTime.getTime())
+    var _billDatePaidDay = _billDatePaidParts[1];
+
+    if (parseInt(_billDatePaidDay) <= 9) {
+      _billDatePaidDay = '0' + _billDatePaidDay;
+    }
+
+    _billDatePaid = _billDatePaidDay + "/" + _billDatePaidParts[0] + "/" + _billDatePaidParts[2];    
+
+    if (_billDateTime.getTime() < _now)
     this.billData.isExpired = true;
-    else this.billData.isExpired = false;
+    else this.billData.isExpired = false;   
+    
   }
 
   public formatDate(): void {
     this.billData.billDate = this.billData.billDate.split('-').reverse().join('/');   
-    this.billData.billPaidDate = this.billData.billPaidDate.split('-').reverse().join('/');   
+    this.billData.billPaidDate = this.billData.billPaidDate.split('-').reverse().join('/');     
   }
 
   public deleteBill(): void {

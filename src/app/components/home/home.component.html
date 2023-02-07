@@ -107,7 +107,7 @@
                     <p>Conta:</p>
                     <div class="change-selector">
                         <select #changeDatabase (change)="changeMyDatabase(changeDatabase.value)" [(ngModel)]="selectedDatabase">
-                            <option selected disabled>Escolha a Conta</option>
+                            <option selected disabled>Escolha...</option>
                             <option value="{{myDBs[i]}}" *ngFor="let db of myDBs; let i = index">
                                 <p>Conta {{i+1}}</p>
                               </option>

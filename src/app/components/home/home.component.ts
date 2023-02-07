@@ -109,6 +109,8 @@ export class HomeComponent implements OnInit {
 
     this.isLoading = true;
 
+    this.selectedDate = this.formatDate(this.monthYear);
+
     this.getUserData();        
   }
 
