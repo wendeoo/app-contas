@@ -159,8 +159,8 @@ export class HomeComponent implements OnInit {
       });    
   }
 
-  public getBills(): void {    
-    const dateParts = this.monthYear.split('-');
+  public getBills(): void {   
+      const dateParts = this.monthYear.split('-');
       const year = dateParts[0];
       const month = dateParts[1]; 
       let _sub = this.firebaseService.getBills(year, month, this.selectedDatabase).pipe(map((actions) =>
@@ -169,19 +169,24 @@ export class HomeComponent implements OnInit {
             const id = a.payload.doc.id;
             return { id, ...data };
           })
-        )).subscribe((data) => {
-          this.isLoading = false;        
+        )).subscribe((data) => {                 
           if (data) {
             setTimeout(() => {        
               this.checkPaidBills();
             }, 100);
             _sub.unsubscribe();
+            this.isLoading = false; 
             this.bills = data;
             this.allBills = data;
             this.filterOptions = 0;
-            this.filterName = 'Todas';
+            this.filterName = 'todas';
           }
         })
+  }
+
+  public refreshBills(): void {
+    this.isLoading = true;
+    this.getBills();
   }
 
   public formatDate(date: string): string {
@@ -197,25 +202,37 @@ export class HomeComponent implements OnInit {
   }
 
   public filterBills(): void {
-    if (this.filterOptions < 3) this.filterOptions++; else this.filterOptions = 0;
+    if (this.filterOptions < 4) this.filterOptions++; else this.filterOptions = 0;
     this.bills = this.allBills;
     switch (this.filterOptions) {
       case 0:
-        this.filterName = 'Todas';
+        this.filterName = 'todas';
       break;
       case 1:        
         this.bills = this.bills.filter((element) => element.isPaid);
-        this.filterName = 'Contas Pagas';
+        this.filterName = 'pagas';
       break;
       case 2:
         this.bills = this.bills.filter((element) => !element.isPaid);
-        this.filterName = 'Contas em Aberto';
+        this.filterName = 'em aberto';
       break;
       case 3:
         this.bills = this.bills.filter((element) => element.isExpired && !element.isPaid);
-        this.filterName = 'Contas em Atraso';
+        this.filterName = 'em atraso';
       break;
-    }
+      case 4:       
+        this.sortBills();             
+        this.filterName = 'vencimento'; 
+      break;
+    }    
+  }
+
+  public sortBills(): any {
+    this.bills = this.bills.filter(bill => bill.isPaid !== true).slice().sort((a, b): any => {
+      const billDateA = new Date(a.billDate.split("/").reverse().join("-")).valueOf();
+      const billDateB = new Date(b.billDate.split("/").reverse().join("-")).valueOf();
+      return billDateA - billDateB;
+    });   
   }
 
   public createNewBill(): void {

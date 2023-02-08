@@ -87,19 +87,30 @@
             }
         }
 
-        .bills-filter {
+        .filter-and-refresh {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: space-between;
             width: 80vw;
-            max-width: 500px;
-            padding: 4px;
-            color: var(--font);
 
             p {
-            font-size: 14px;
-            font-weight: 600;
-            margin-left: 8px;                
+                font-size: 14px;
+                font-weight: 600;
+                padding-left: 5px;
+                color: var(--font);                
+            }
+
+            .bills-filter {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                width: auto;        
+            }
+
+            .refresh {
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
         }
 

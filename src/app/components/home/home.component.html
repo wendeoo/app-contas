@@ -28,9 +28,15 @@
                 <mat-icon (click)="createNewBill()">note_add</mat-icon>
             </div> 
         </div>
-        <div class="bills-filter" *ngIf="allBills.length">
-            <mat-icon (click)="filterBills()">refresh</mat-icon>
-            <p (click)="filterBills()">{{ filterName }}</p>
+        <div class="filter-and-refresh">
+            <div class="bills-filter" *ngIf="allBills.length">
+                <mat-icon (click)="filterBills()">filter_list</mat-icon>
+                <p (click)="filterBills()">Exibir: {{ filterName }}</p>
+            </div>
+            <div class="refresh" (click)="refreshBills()">
+                <mat-icon>sync</mat-icon>
+                <p>sincronizar</p>
+            </div>
         </div>
         <div class="no-bills" *ngIf="!allBills.length">
             <mat-icon>error_outline</mat-icon>
