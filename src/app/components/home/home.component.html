@@ -5,7 +5,7 @@
     (settingsEmitter)="goToSettings()"
     ></app-header>
     <div class="members">
-        <p *ngIf="!isLoading">Conta selecionada: {{ dbOwner }}</p>
+        <p *ngIf="!isLoading">Conta selecionada: <strong>{{ dbOwner }}</strong></p>
         <p *ngIf="isLoading">...</p>
     </div>
     <div class="content" *ngIf="!isLoading && !isSettings">
@@ -20,8 +20,8 @@
         </div>
         <div class="expenses">
             <div class="month-expenses">
-                <div class="paid-total">Total Pago: <strong>{{ valueCalc('paid') }}</strong></div>
-                <div class="unpaid-total">Em Aberto: <strong>{{ valueCalc('unpaid') }}</strong></div>
+                <div class="paid-total">Total Pago: {{ valueCalc('paid') }}</div>
+                <div class="unpaid-total">Em Aberto: {{ valueCalc('unpaid') }}</div>
             </div>
             <div class="add-new-bill">
                 <p>Nova Conta</p>
@@ -30,8 +30,8 @@
         </div>
         <div class="filter-and-refresh">
             <div class="bills-filter" *ngIf="allBills.length">
-                <mat-icon (click)="filterBills()">filter_list</mat-icon>
-                <p (click)="filterBills()">Exibir: {{ filterName }}</p>
+                <mat-icon (click)="filterBills()">view_headline</mat-icon>
+                <p (click)="filterBills()">exibir: {{ filterName }}</p>
             </div>
             <div class="refresh" (click)="refreshBills()">
                 <mat-icon>sync</mat-icon>
