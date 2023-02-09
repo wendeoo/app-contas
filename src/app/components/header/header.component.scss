@@ -4,13 +4,14 @@
     align-items: center;
     flex-direction: column;
     background-color: var(--darkest);
-    width: 100vw;
+    width: 100vw;    
 
     .content {
         display: flex;
         align-items: center;
         justify-content: space-between;   
-        width: 90%;     
+        width: 90%;
+        max-width: 600px;     
         height: 40px;
         padding: 10px 14px 0 14px;
         color: var(--font-header);
@@ -23,6 +24,7 @@
         justify-content: space-between;
         align-items: center;
         width: 90%;
+        max-width: 600px;
         margin-bottom: 18px;
         font-size: 14px;
         font-weight: 600;
