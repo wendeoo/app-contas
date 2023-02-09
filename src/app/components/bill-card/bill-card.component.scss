@@ -131,7 +131,8 @@
             #checkbox-paid {
                 width: 20px;
                 height: 20px;
-                accent-color: var(--checkbox-paid);       
+                accent-color: var(--checkbox-paid);   
+                cursor: pointer;    
             }
             #checkbox-paid:checked {
                 background-color: #fafafa;
@@ -175,6 +176,7 @@
             justify-content: space-between;
             font-size: 14px;
             font-weight: 700;  
+            cursor: pointer;
             
             .bill-edit {   
                 color: #fafafa;                   

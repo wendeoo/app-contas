@@ -70,6 +70,11 @@
                 font-size: 50px;
                 width: auto;
                 height: auto;
+                cursor: pointer;
+
+                    &:hover {
+                        color: var(--mid);
+                    }
                 }        
             }
         }
@@ -107,13 +112,22 @@
                 display: flex;
                 align-items: center;
                 justify-content: flex-start;
-                width: auto;        
+                width: auto; 
+                cursor: pointer;       
             }
 
             .refresh {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                cursor: pointer; 
+                
+                &:hover {
+                    mat-icon {
+                        transition: all .7s ease-in-out;
+                        transform: rotate(360deg);
+                    }                   
+                }               
             }
         }
 
@@ -262,6 +276,7 @@
                     mat-icon {
                         color: var(--darkest);
                         margin-left: 10px;
+                        cursor: pointer;
                     } 
                 }
 
@@ -356,6 +371,7 @@
                     mat-icon {
                         color: var(--darkest);
                         margin-left: 10px;
+                        cursor: pointer;
                     }
                 }
 
@@ -439,6 +455,7 @@
                     mat-icon {
                         color: var(--darkest);
                         margin-left: 8px;
+                        cursor: pointer;
                     }
                 }
 
@@ -472,6 +489,7 @@
             font-size: 15px;
             font-weight: 600;
             color: var(--error-red);
+            cursor: pointer;
 
             mat-icon {
                 margin-left: 15px;

@@ -1,7 +1,7 @@
 .container {
     display: flex;
     justify-content: center;        
-    padding: 10vw;
+    padding: 5vw;
     background-color: var(--background);
     height: 100vh;
     
@@ -20,6 +20,7 @@
         justify-content: center;      
         background-color: var(--darkest);
         width: 100%;
+        max-width: 600px;
         height: auto;
         max-height: 650px;
         border-radius: 12px;

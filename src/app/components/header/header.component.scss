@@ -17,6 +17,12 @@
         color: var(--font-header);
         font-weight: 700;
         font-size: 18px;
+
+        mat-icon {
+            &:hover {
+                color: var(--lightest);
+            }
+        }
     }
 
     .today {
