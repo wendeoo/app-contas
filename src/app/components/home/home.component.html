@@ -28,8 +28,8 @@
                 <mat-icon (click)="createNewBill()">note_add</mat-icon>
             </div> 
         </div>
-        <div class="filter-and-refresh">
-            <div class="bills-filter" *ngIf="allBills.length">
+        <div class="filter-and-refresh" *ngIf="allBills.length">
+            <div class="bills-filter">
                 <mat-icon (click)="filterBills()">view_headline</mat-icon>
                 <p (click)="filterBills()">exibir: {{ filterName }}</p>
             </div>
