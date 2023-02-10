@@ -241,7 +241,7 @@ export class HomeComponent implements OnInit {
       billName: '',
       billValue: '',
       billDate: this.today,
-      billPaidDate: this.today,
+      billPaidDate: '',
       isPaid: false,
       isLocked: false,
       isEditing: true

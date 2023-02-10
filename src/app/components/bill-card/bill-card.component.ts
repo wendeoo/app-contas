@@ -60,6 +60,7 @@ export class BillCardComponent implements OnInit {
     const dateParts = this.selectedPeriod.split('-');
     const year = dateParts[0];
     const month = dateParts[1];
+    this.billData.billPaidDate = this.today;
     this.updateBill(year, month, this.billData.id, this.billData);
   }
 
@@ -122,7 +123,7 @@ export class BillCardComponent implements OnInit {
 
     if (_billDateTime.getTime() < _now)
     this.billData.isExpired = true;
-    else this.billData.isExpired = false;   
+    else this.billData.isExpired = false; 
     
   }
 
