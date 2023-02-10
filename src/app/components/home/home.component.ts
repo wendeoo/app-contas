@@ -52,6 +52,7 @@ export class HomeComponent implements OnInit {
   public savedDb: any;
   public invitationError: boolean = false;
   public invitationSuccess: boolean = false;
+  public changelogs: any[] = [];
 
   constructor(
     private firebaseService: FirebaseService,
@@ -61,6 +62,12 @@ export class HomeComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
+
+    this.changelogs = [
+      `• 10/02/2022 [bug fix] - data do pagamento agora é criada somente no momento em que a conta é marcada como paga, 
+          evitando contas criadas há dias atrás iniciarem com data retroativa.`,
+      `• 10/02/2022 [feature] - Implementação do changelog.`
+    ]
 
     let _theme = localStorage.getItem('selectedTheme');
     if (_theme) this.theme = _theme;
@@ -111,7 +118,7 @@ export class HomeComponent implements OnInit {
 
     this.selectedDate = this.formatDate(this.monthYear);
 
-    this.getUserData();        
+    this.getUserData();   
   }
 
   public getMyDatabases(): void {

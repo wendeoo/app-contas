@@ -477,22 +477,56 @@
                     margin-left: 6px;
                 }
             }
+            
+            .exit-app {
+                align-self: center;
+
+                a {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding-top: 20px;
+                    width: auto;
+                    height: auto;
+                    font-size: 15px;
+                    font-weight: 600;
+                    color: var(--error-red);
+                    cursor: pointer;
+        
+                    mat-icon {
+                        margin-left: 10px;
+                    }
+                }
+            }
         }
 
-        a {
+
+        .changelog-container {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding-top: 20px;
-            width: auto;
+            max-width: 520px;
+            width: 89vw;
             height: auto;
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--error-red);
-            cursor: pointer;
+            gap: 10px;
 
-            mat-icon {
-                margin-left: 15px;
+            .changelog-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: var(--font);
+            }
+            
+            .changelog-change {
+                display: flex;
+                align-items: flex-start;
+                width: 100%;
+                
+                .changelog-text {
+                    font-size: 14px;
+                    text-align: justify;
+                }
             }
         }
     }

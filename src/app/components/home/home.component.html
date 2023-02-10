@@ -126,9 +126,15 @@
                     Alterne entre as contas que você tem acesso.
                 </div>
             </div>
+            <div class="exit-app">
+                <a (click)="logout()">Sair da Conta<mat-icon>exit_to_app</mat-icon></a>
+            </div>
         </div>
-        <div class="exit-app">
-            <a (click)="logout()">Sair da Conta<mat-icon>exit_to_app</mat-icon></a>
+        <div class="changelog-container">
+            <p class="changelog-title">Changelog (ver. 1.01)</p>
+            <div class="changelog-change" *ngFor="let change of changelogs">
+                <p class="changelog-text">{{ change }}</p>
+            </div>            
         </div>
     </div>
     <div class="loader" *ngIf="isLoading"><app-loader></app-loader>   
