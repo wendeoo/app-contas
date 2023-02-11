@@ -8,6 +8,12 @@
     border-radius: 8px;
     background-color: var(--card-not-paid);
 
+    input {
+        &:hover {
+            background-color: var(--lightest);
+        }
+    }
+
     .lock {
         display: flex;
         justify-content: flex-start;
@@ -24,14 +30,7 @@
             font-size: 12px;
             padding-left: 6px;
         }
-    }
-
-    input {
-        outline: 1px;
-        border-radius: 5px;
-        padding: 3px;
-        border-width: 2px;
-    }
+    }   
 
     &.bill-paid  {
         background-color: var(--card-paid);
@@ -39,7 +38,7 @@
 
     &.bill-editing {
         background-color: #fafafa;
-        box-shadow: 0px 4px 0px 0px rgba(#000000, 0.2);
+        box-shadow: 0px 1px 1px 2px rgba(#000000, 0.2);
     }
 
     .bill-header {
@@ -106,7 +105,8 @@
         .name-input {
             color: #2e2e2e;
             font-size: 16px;
-            width: 100%;           
+            width: 100%;
+            max-width: 200px;           
         }              
     } 
     
@@ -171,16 +171,15 @@
 
         .icons {
             display: flex;
-            flex-direction: column;
             align-items: flex-end;
             justify-content: space-between;
-            font-size: 14px;
+            font-size: 18px;
             font-weight: 700;  
+            gap: 10px;
             cursor: pointer;
             
             .bill-edit {   
-                color: #fafafa;                   
-                margin-left: 4px; 
+                color: #fafafa; 
                 
                 &.bill-editing {
                     color: #2e2e2e;
@@ -195,9 +194,7 @@
                     color: gray;
                 }
                 
-                .bill-delete {                  
-                    margin-left: 4px; 
-                    
+                .bill-delete {                    
                     &.bill-editing :not(.disabled) {
                         color: #2e2e2e;
                     }
@@ -217,9 +214,7 @@
                     color: gray;
                 }
 
-                .bill-save {                                       
-                    margin-left: 4px; 
-                    
+                .bill-save {                    
                     &.bill-editing :not(.disabled) {
                         color: #2e2e2e;
                     }

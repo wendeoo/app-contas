@@ -11,10 +11,10 @@
     }
 
     input {
-        outline: none;
-        border-radius: 5px;
         padding: 3px;
-        border-width: 0px;
+        border: none;
+        border-bottom: 1px solid #2e2e2e;
+        background: transparent;
     }
 
     input::-webkit-outer-spin-button,

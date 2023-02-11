@@ -365,7 +365,9 @@
                         font-size: 14px;
                         margin-left: 10px;
                         width: 120px;
-                        border: 1px solid gray;                    
+                        border: 1px solid gray;  
+                        background-color: white; 
+                        border-radius: 5px;                 
                     }
 
                     mat-icon {

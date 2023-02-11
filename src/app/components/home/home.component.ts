@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit {
 
     this.changelogs = [
       `• 10/02/2022 [bug fix] - data do pagamento agora é criada somente no momento em que a conta é marcada como paga, 
-          evitando contas criadas há dias atrás iniciarem com data retroativa.`,
+          evitando contas criadas há dias iniciarem com data retroativa.`,
       `• 10/02/2022 [feature] - Implementação do changelog.`
     ]
 
